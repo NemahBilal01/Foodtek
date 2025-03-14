@@ -12,7 +12,6 @@ android {
     namespace = "com.example.firebasewithnotification"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
-    compileSdkVersion 34
 
 
 

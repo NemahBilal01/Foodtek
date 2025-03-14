@@ -1,4 +1,5 @@
 import 'package:firebasewithnotification/screens/login_screen.dart';
+import 'package:firebasewithnotification/screens/reset_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 class LocationScreen extends StatelessWidget {
@@ -118,7 +119,7 @@ class LocationScreen extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => LogInScreen()));
+                      builder: (context) => ResetPasswordScreen()));
             },
             style: ElevatedButton.styleFrom(
               minimumSize: Size(307, 48),
@@ -162,7 +163,7 @@ Future<Position> _determinePosition() async {
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      
+
       return Future.error('Location permissions are denied');
     }
   }

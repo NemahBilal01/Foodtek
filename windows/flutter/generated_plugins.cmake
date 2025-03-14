@@ -3,6 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+<<<<<<< HEAD
+=======
+  firebase_auth
+>>>>>>> 7821b8b (Add last changes)
   firebase_core
   flutter_localization
   geolocator_windows
