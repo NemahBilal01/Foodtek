@@ -37,19 +37,19 @@
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationPortrait<UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
+	<true/>/string>
+           		<string>UIInterfaceOrientationLandscapeLeft</string>
+           		<string>UIInterfaceOrientationLandscapeRight</string>
+           	</array>
+           	<key>UISupportedInterfaceOrientations~ipad</key>
+           	<array>
+           		<string>UIInterfaceOrientationPortrait</string>
+           		<string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 </dict>

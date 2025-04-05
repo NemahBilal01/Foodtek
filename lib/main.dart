@@ -1,7 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebasewithnotification/providers/cart_provider.dart';
+import 'package:firebasewithnotification/providers/order_provider.dart';
+import 'package:firebasewithnotification/screens/cart&history_screen.dart';
+import 'package:firebasewithnotification/screens/cart_screen.dart';
+import 'package:firebasewithnotification/screens/chat_screen.dart';
+import 'package:firebasewithnotification/screens/cheeseburger%20_screen.dart';
+import 'package:firebasewithnotification/screens/filter_screen.dart';
+import 'package:firebasewithnotification/screens/history_screen.dart';
+import 'package:firebasewithnotification/screens/order_details_screen.dart';
+import 'package:firebasewithnotification/screens/rest_success_screen.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:provider/provider.dart';
 import 'package:firebasewithnotification/screens/delivery_screen.dart';
 import 'package:firebasewithnotification/screens/food_selection_screen.dart';
 import 'package:firebasewithnotification/screens/splash_screen.dart';
@@ -13,7 +23,16 @@ import 'firebase_options.dart';
 Future<void> main() async {
   await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,);
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context)=>OrderProvider()),
+      ],
+
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,10 +48,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
 
 
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+
         useMaterial3: true,
       ),
-      home: SplashScreen(),
+      home: HistoryScreen(),
 
          localizationsDelegates: [
            AppLocale.delegate,
