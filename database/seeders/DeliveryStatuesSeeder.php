@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\DeliveryStatues;
+use App\Models\DeliveryStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,6 +13,6 @@ class DeliveryStatuesSeeder extends Seeder
      */
     public function run(): void
     {
-        DeliveryStatues::factory(20)->create();
+        DeliveryStatus::factory(20)->create();
     }
 }

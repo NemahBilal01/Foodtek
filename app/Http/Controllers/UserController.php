@@ -39,9 +39,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'phone' => $request->phone
         ]);
-
-
-       // dd(session()->all());
+        
         return redirect()->route('users.index')->with('success', 'User created successfully!'); //for now to testing
     }
 

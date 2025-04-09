@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->decimal('longitude', 11, 8)->nullable();
             $table->timestamp('last_updated_at')->nullable();
             $table->timestamps();
-
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->softDeletes();
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade')->name('delivery_trackings_order_id_foreign');
         });
     }
 

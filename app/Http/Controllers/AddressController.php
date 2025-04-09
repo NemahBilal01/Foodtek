@@ -19,7 +19,7 @@ class AddressController extends Controller
      */
     public function create()
     {
-        //
+        return view('addresses.create');
     }
 
     /**
@@ -27,7 +27,17 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the incoming request
+        $request->validate([
+            'street' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:20',
+            'country' => 'required|string|max:255',
+        ]);
+
+        Address::create($request->all());
+        return redirect()->route('addresses.index')->with('success', 'Address created successfully!');
     }
 
     /**
@@ -35,7 +45,8 @@ class AddressController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $address = Address::findOrFail($id);
+        return view('addresses.show', compact('address'));
     }
 
     /**
@@ -43,7 +54,8 @@ class AddressController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $address = Address::findOrFail($id);
+        return view('addresses.edit', compact('address'));
     }
 
     /**
@@ -51,7 +63,17 @@ class AddressController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $address = Address::findOrFail($id);
+        $request->validate([
+            'street' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:20',
+            'country' => 'required|string|max:255',
+        ]);
+
+        $address->update($request->all());
+        return redirect()->route('addresses.index')->with('success', 'Address updated successfully!');
     }
 
     /**
@@ -59,6 +81,8 @@ class AddressController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $address = Address::findOrFail($id);
+        $address->delete();
+        return redirect()->route('addresses.index')->with('success', 'Address deleted successfully!');
     }
 }

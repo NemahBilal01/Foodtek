@@ -11,16 +11,15 @@ class DeliveryTrackingController extends Controller
     public function index()
     {
         $deliveryTracking = DeliveryTracking::all();
-        // dd($deliveryTracking);
-        return view('deliveryTracking.index',compact('deliveryTracking'));
+        return view('deliveryTracking.index', compact('deliveryTracking'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(){
-
-        //
+    public function create()
+    {
+        return view('deliveryTracking.create');
     }
 
     /**
@@ -28,7 +27,16 @@ class DeliveryTrackingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'order_id' => 'required|integer',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'last_updated_at' => 'required|date',
+        ]);
+
+        DeliveryTracking::create($request->all());
+
+        return redirect()->route('deliveryTracking.index')->with('success', 'Delivery Tracking created successfully.');
     }
 
     /**
@@ -44,7 +52,8 @@ class DeliveryTrackingController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $deliveryTrack = DeliveryTracking::findOrFail($id);
+        return view('deliveryTracking.edit', compact('deliveryTrack'));
     }
 
     /**
@@ -52,7 +61,17 @@ class DeliveryTrackingController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'order_id' => 'required|integer',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'last_updated_at' => 'required|date',
+        ]);
+
+        $deliveryTrack = DeliveryTracking::findOrFail($id);
+        $deliveryTrack->update($request->all());
+
+        return redirect()->route('deliveryTracking.index')->with('success', 'Delivery Tracking updated successfully.');
     }
 
     /**
@@ -60,6 +79,9 @@ class DeliveryTrackingController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $deliveryTrack = DeliveryTracking::findOrFail($id);
+        $deliveryTrack->delete();
+
+        return redirect()->route('deliveryTracking.index')->with('success', 'Delivery Tracking deleted successfully.');
     }
 }
