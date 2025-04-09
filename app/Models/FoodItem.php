@@ -15,8 +15,9 @@ class FoodItem extends Model
         'name',
         'description',
         'price',
-        'image',
+        'image_path',
         'category_id',
+        'restaurant_id',
         'is_available'
     ];
 
@@ -33,7 +34,10 @@ class FoodItem extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
-
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
     public function category():BelongsTo
     {
         return $this->belongsTo(Category::class);
