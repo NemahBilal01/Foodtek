@@ -10,9 +10,8 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::all();
-        // dd($notifications);
-        return view('notifications.index',compact('notifications'));
+        $notifications = Notification::all();  // Fetch all notifications
+        return view('notifications.index', compact('notifications'));
     }
 
     /**
@@ -44,7 +43,8 @@ class NotificationController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $notification = Notification::findOrFail($id);
+        return view('notifications.edit', compact('notification')); 
     }
 
     /**
@@ -60,6 +60,9 @@ class NotificationController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $notification = Notification::findOrFail($id);
+        $notification->delete();
+    
+        return redirect()->route('notifications.index')->with('success', 'Notification deleted successfully');
     }
 }

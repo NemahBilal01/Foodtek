@@ -1,41 +1,56 @@
 <!-- resources/views/users/edit.blade.php -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit User</title>
-</head>
-<body>
-    <h1>Edit User</h1>
+@extends('layouts.app')
 
-    <form action="{{ route('users.update', $user) }}" method="POST">
-        @csrf
-        @method('PUT')
-        <label>Name:</label>
-        <input type="text" name="name" value="{{ old('name', $user->name) }}" required>
-        
-        <label>Email:</label>
-        <input type="email" name="email" value="{{ old('email', $user->email) }}" required>
+@section('content')
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-4 d-inline">Edit User</h5>
+                <a href="{{ route('users.index') }}" class="btn btn-outline-dark mb-4 text-center mx-5 mt-3">Back to Users List</a>
+                <form action="{{ route('users.update', $user) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name:</label>
+                        <input type="text" class="form-control" name="name" value="{{ old('name', $user->name) }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" name="email" value="{{ old('email', $user->email) }}" required>
+                    </div>
 
-        <label>Password (leave blank to keep current):</label>
-        <input type="password" name="password" placeholder="Enter new password">
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password (leave blank to keep current):</label>
+                        <input type="password" class="form-control" name="password" placeholder="Enter new password">
+                    </div>
 
-        <label>Confirm Password:</label>
-        <input type="password" name="password_confirmation" placeholder="Confirm new password">
+                    <div class="mb-3">
+                        <label for="password_confirmation" class="form-label">Confirm Password:</label>
+                        <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm new password">
+                    </div>
 
-        <label>Phone:</label>
-        <input type="text" name="phone" value="{{ old('phone', $user->phone) }}">
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone:</label>
+                        <input type="text" class="form-control" name="phone" value="{{ old('phone', $user->phone) }}">
+                    </div>
 
-        <button type="submit">Update User</button>
-    </form>
-    @if ($errors->any())
-    <div style="color: red;">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+                    <button type="submit" class="btn btn-primary mt-3">Update User</button>
+                </form>
+
+                @if ($errors->any())
+                <div class="mt-3" style="color: red;">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+            </div>
+        </div>
     </div>
-    @endif
-</body>
-</html>
+</div>
+@endsection

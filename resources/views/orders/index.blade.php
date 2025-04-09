@@ -1,12 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="row">
     <div class="col">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title mb-4 d-inline">Orders</h5>
-         <a  href="#" class="btn btn-outline-dark mb-4 text-center mx-5 mt-3">Create New</a>
+          <a href="{{ route('orders.create') }}" class="btn btn-outline-dark mb-4 text-center mx-5 mt-3">Create New</a>
+          @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
           <table class="table table-striped">
             <thead>
               <tr>
@@ -34,8 +40,8 @@
                 <td> {{  $order->created_at }}</td>
                 <td> {{  $order->updated_at }}</td>
                 <td>
-                    <a class="btn btn-primary" href="" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Edit</a>
-                    <form action="" method="POST" style="display:inline;">
+                  <a class="btn btn-primary" href="{{ route('orders.edit', $order->id) }}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Edit</a>
+                  <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
                         <button  class="btn btn-danger" type="submit"  style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Delete</button>

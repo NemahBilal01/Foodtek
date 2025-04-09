@@ -1,15 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-@if (session('success'))
-    <p style="color: green;">{{ session('success') }}</p>
-@endif
+
 <div class="row">
     <div class="col">
         <div class="card">
         <div class="card-body">
             <h5 class="card-title mb-4 d-inline">Users</h5>
-            <a  href="#" class="btn btn-outline-dark mb-4 text-center mx-5 mt-3">Create New</a>
+            <a href="{{ route('users.create') }}" class="btn btn-outline-dark mb-4 text-center mx-5 mt-3">Create New</a>
+            @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
             <table class="table table-striped">
             <thead>
                 <tr>

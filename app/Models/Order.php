@@ -34,7 +34,7 @@ class Order extends Model
     }
 
     public function deliveryStatuses() {
-        return $this->hasMany(DeliveryStatues::class);
+        return $this->hasMany(DeliveryStatus::class);
 
     }
     public function tracking()
@@ -45,6 +45,6 @@ class Order extends Model
 
     public function latestStatus()
     {
-        return $this->hasOne(DeliveryStatues::class)->latestOfMany();
+        return $this->hasOne(DeliveryStatus::class)->latestOfMany();
     }
 }

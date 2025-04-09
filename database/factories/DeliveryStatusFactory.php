@@ -3,18 +3,20 @@
 namespace Database\Factories;
 
 use App\Models\Order;
+use App\Models\DeliveryStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\deliveryStatues>
  */
-class DeliveryStatuesFactory extends Factory
+class DeliveryStatusFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
+    protected $model = DeliveryStatus::class;
     public function definition(): array
     {
         return [

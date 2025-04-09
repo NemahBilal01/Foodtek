@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class DeliveryStatues extends Model
+class DeliveryStatus extends Model
 {
-    /** @use HasFactory<\Database\Factories\DeliveryStatuesFactory> */
+    /** @use HasFactory<\Database\Factories\DeliveryStatusFactory> */
     use HasFactory;
 
     protected $fillable =[
