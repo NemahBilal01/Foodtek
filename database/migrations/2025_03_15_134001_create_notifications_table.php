@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('is_read')->default(false);
             $table->timestamp('read_at')->nullable();
             $table->softDeletes();
+            
         });
     }
 
