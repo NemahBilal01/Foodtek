@@ -30,8 +30,7 @@ Route::resource('payments', PaymentController::class);
 
 
 Route::get('/', [UserController::class, 'index'])->name('users.index');
-Route::post('/users', [UserController::class, 'store'])->name('users.store');
-
+Route::post('users', [UserController::class, 'store'])->name('users.store');
 
 /*
 Route::get('/', function () {

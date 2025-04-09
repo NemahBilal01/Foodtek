@@ -23,10 +23,11 @@ class DatabaseSeeder extends Seeder
             CartItemSeeder::class,
             OrderSeeder::class,
             OrderItemSeeder::class,
-            // NotificationSeeder::class,
+            NotificationSeeder::class,
             AddressSeeder::class,
             DeliveryStatuesSeeder::class,
             DeliveryTrackingSeeder::class,
+            PaymentSeeder::class,
 
         ]);
 

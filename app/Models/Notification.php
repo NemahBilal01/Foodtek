@@ -18,13 +18,12 @@ class Notification extends Model
         'is_read',
         'read_at'
     ];
-    public $timestamps = false;
-    
+   
     protected $casts = [
         'is_read' => 'boolean',
         'read_at' => 'datetime',
     ];
-    
+    public $timestamps = false;
    public function user():BelongsTo{
     return $this->belongsTo(User::class);
    }

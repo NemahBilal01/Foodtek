@@ -1,21 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
-
-use function Laravel\Prompts\password;
 
 class UserController extends Controller
 {
     public function index(){
-        $users = User::all();
-        return view('users.index',compact('users'));
+        return User::all();
     }
 
     public function create()
@@ -23,28 +20,32 @@ class UserController extends Controller
         return view('users.create');
     }
 
+    public function show(User $user)
+    {
+        return response()->json($user);
+    }
 
     public function store(Request $request)
     {
 
-
-        //incomig data
-        $request->validate([
+        $validated = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
             'phone' => 'nullable|string|max:15'
         ]);
 
-        //create
-        User::create([
+        if ($validated->fails()) {
+            return response()->json($validated->errors(), 400);
+        }
+
+       $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone
         ]);
-        
-        return redirect()->route('users.index')->with('success', 'User created successfully!'); //for now to testing
+        return response()->json($user , 201);
     }
 
 
@@ -53,40 +54,40 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
+
     public function update(Request $request, User $user)
 {
-    $validated = $request->validate([
+    $validated = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'password' => 'nullable|min:8|confirmed',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:8|confirmed',
         'phone' => 'nullable|string|max:15'
     ]);
+
+    if ($validated->fails()) {
+        return response()->json($validated->errors(), 400);
+    }
 
     // Check if phone number is already in use
     if ($request->phone && User::where('phone', $request->phone)->where('id', '!=', $user->id)->exists()) {
         return redirect()->back()->withErrors(['phone' => 'Phone number is already taken.']);
     }
-
-    try {
         $user->update([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $request->filled('password') ? Hash::make($validated['password']) : $user->password,
-            'phone' => $validated['phone']
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' =>Hash::make($request->password),
+            'phone' => $request->phone
         ]);
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully!');
+        return response()->json($user);
 
-    } catch (QueryException $e) {
-        return redirect()->back()->withErrors(['error' => 'Something went wrong! ' . $e->getMessage()]);
-    }
 }
 
 
     public function destroy(User $user)
     {
         $user->delete();
-         return redirect()->route('users.index'); //for now to testing
+        return response()->json(['message'=>'deleted successfully'] ,200);
 
     }
 }

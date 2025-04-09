@@ -16,6 +16,7 @@ class Order extends Model
         'status',
         'total_price',
         'payment_status',
+        'restaurant_id'
     ];
     protected $casts = [
         'total_price' => 'decimal:2',
