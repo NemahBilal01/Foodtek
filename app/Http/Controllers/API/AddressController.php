@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AddressController extends Controller
 {
@@ -25,7 +26,7 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validated = Validator::make($request->all(),[
             'user_id' => 'required|exists:users,id',
             'address_line' => 'required|string|max:255',
             'country' => 'required|string|max:100',
@@ -34,7 +35,30 @@ class AddressController extends Controller
             'zip_code' => 'required|string|max:20',
         ]);
 
-        $address = Address::create($validated);
+        if($validated->fails()){
+            return response()->json($validated->errors(),400);
+        }
+
+            $address = Address::create([
+                'user_id'=>$request->user_id,
+                'address_line'=>$request->address_line,
+                'country'=>$request->country,
+                'state'=>$request->state,
+                'city'=>$request->city,
+                'zip_code'=>$request->zip_code,
+                        ]);
+
+
+        // $validated = $request->validate([
+        //     'user_id' => 'required|exists:users,id',
+        //     'address_line' => 'required|string|max:255',
+        //     'country' => 'required|string|max:100',
+        //     'state' => 'required|string|max:100',
+        //     'city' => 'required|string|max:100',
+        //     'zip_code' => 'required|string|max:20',
+        // ]);
+
+        // $address = Address::create($validated);
 
         return response()->json($address, 201);
     }
@@ -83,7 +107,7 @@ class AddressController extends Controller
         return response()->json(['message' => 'Address deleted successfully.'], 200);
     }
 
-    //Soft Delete Recovery 
+    //Soft Delete Recovery
     /*public function restore($id)
     {
         $address = Address::withTrashed()->findOrFail($id);

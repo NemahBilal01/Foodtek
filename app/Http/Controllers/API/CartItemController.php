@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\CartItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CartItemController extends Controller
 {
@@ -22,12 +23,28 @@ class CartItemController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request ->validate([
-            'user_id' => 'required | exists : users,id',
+        $validated = Validator::make($request->all(),[
+            'user_id' => 'required|exists:users,id',
             'food_item_id'=> 'required|exists:food_items,id',
             'quantity'=> 'required|integer|min:1',
         ]);
-        $cartItem = CartItem::create($validated);
+
+        if($validated->fails()){
+            return response()->json($validated->errors(),400);
+        }
+
+        // $validated = $request ->validate([
+        //     'user_id' => 'required|exists:users,id',
+        //     'food_item_id'=> 'required|exists:food_items,id',
+        //     'quantity'=> 'required|integer|min:1',
+        // ]);
+
+        $cartItem = CartItem::create([
+            'user_id'=>$request->user_id,
+            'food_item_id'=>$request->food_item_id,
+            'quantity'=>$request->quantity,
+                    ]);
+        // $cartItem = CartItem::create($validated);
         return response()->json($cartItem,201);
     }
 
@@ -47,12 +64,27 @@ class CartItemController extends Controller
     public function update(Request $request, string $id)
     {
         $cartItem = CartItem::findOrFail($id);
-        $validated = $request ->validate([
-            'user_id' => 'sometimes | exists : users,id',
-            'food_item_id'=> 'sometimes|exists:food_items,id',
-            'quantity'=> 'sometimes|integer|min:1',
+        $validated = Validator::make($request->all(),[
+            'user_id' => 'required|exists:users,id',
+            'food_item_id'=> 'required|exists:food_items,id',
+            'quantity'=> 'required|integer|min:1',
         ]);
-        $cartItem->update($validated);
+
+        if($validated->fails()){
+            return response()->json($validated->errors(),400);
+        }
+            $cartItem->update([
+            'user_id'=>$request->user_id,
+            'food_item_id'=>$request->food_item_id,
+            'quantity'=>$request->quantity,
+                        ]);
+
+        // $validated = $request ->validate([
+        //     'user_id' => 'sometimes | exists : users,id',
+        //     'food_item_id'=> 'sometimes|exists:food_items,id',
+        //     'quantity'=> 'sometimes|integer|min:1',
+        // ]);
+        // $cartItem->update($validated);
         return response()->json($cartItem);
 
     }
@@ -64,6 +96,6 @@ class CartItemController extends Controller
     {
         $cartItem = CartItem::findOrFail($id);
         $cartItem->delete();
-        return redirect()->route('cartItems.index');
+        return response()->json(['message' => 'cart item deleted successfully.'], 200);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DeliveryStatusesController extends Controller
 {
@@ -13,8 +14,8 @@ class DeliveryStatusesController extends Controller
      */
     public function index()
     {
-        //return DeliveryStatus::all();
-        return response()->json(DeliveryStatus::all());
+        return DeliveryStatus::all();
+        // return response()->json(DeliveryStatus::all());
     }
 
     /**
@@ -22,11 +23,23 @@ class DeliveryStatusesController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validated = Validator::make($request->all(),[
             'order_id'=>'required|exists:orders,id',
             'status' => 'required|in:pending,dispatched,out_for_delivery,delivered'
         ]);
-        $deliveryStatues = DeliveryStatus::create($validated);
+
+        if($validated->fails()){
+            return response()->json($validated->errors(),400);
+        }
+            $deliveryStatues =  DeliveryStatus::create([
+            'order_id'=>$request->order_id,
+            'status'=>$request->status,
+            ]);
+        // $validated = $request->validate([
+        //     'order_id'=>'required|exists:orders,id',
+        //     'status' => 'required|in:pending,dispatched,out_for_delivery,delivered'
+        // ]);
+        // $deliveryStatues = DeliveryStatus::create($validated);
         return response()->json($deliveryStatues,201);
     }
 
@@ -45,11 +58,24 @@ class DeliveryStatusesController extends Controller
     public function update(Request $request, string $id)
     {
         $deliveryStatues = DeliveryStatus::findOrFail($id);
-        $validated = $request->validate([
+        $validated = Validator::make($request->all(),[
             'order_id'=>'sometimes|exists:orders,id',
             'status' => 'sometimes|in:pending,dispatched,out_for_delivery,delivered',
         ]);
-        $deliveryStatues->update($validated);
+
+        if($validated->fails()){
+            return response()->json($validated->errors(),400);
+        }
+            $deliveryStatues->update([
+            'order_id'=>$request->order_id,
+            'status'=>$request->status,
+
+                        ]);
+        // $validated = $request->validate([
+        //     'order_id'=>'sometimes|exists:orders,id',
+        //     'status' => 'sometimes|in:pending,dispatched,out_for_delivery,delivered',
+        // ]);
+        // $deliveryStatues->update($validated);
         return response()->json($deliveryStatues);
     }
 

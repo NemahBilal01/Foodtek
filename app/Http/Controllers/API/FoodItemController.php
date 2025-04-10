@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\FoodItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FoodItemController extends Controller
 {
@@ -21,7 +22,8 @@ class FoodItemController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+
+        $validated = Validator::make($request->all(),[
             'restaurant_id' => 'required|exists:restaurants,id',
             'category_id' =>'required|exists:categories,id',
             'name'=>'required|string|max:100',
@@ -29,9 +31,31 @@ class FoodItemController extends Controller
             'price' => 'required|numeric|min:0',
             'image_path'=>'nullable|string',
             'is_available'=>'required|boolean',
-
         ]);
-        $foodItem = FoodItem::create($validated);
+
+        if($validated->fails()){
+            return response()->json($validated->errors(),400);
+        }
+        $foodItem = FoodItem::create([
+            'restaurant_id'=>$request->restaurant_id,
+            'category_id'=>$request->category_id,
+            'name'=>$request->name,
+            'description'=>$request->description,
+            'price'=>$request->price,
+            'image_path'=>$request->image_path,
+            'is_available'=>$request->is_available,
+                    ]);
+        // $validated = $request->validate([
+            // 'restaurant_id' => 'required|exists:restaurants,id',
+            // 'category_id' =>'required|exists:categories,id',
+            // 'name'=>'required|string|max:100',
+            // 'description'=>'nullable|string|max:255',
+            // 'price' => 'required|numeric|min:0',
+            // 'image_path'=>'nullable|string',
+            // 'is_available'=>'required|boolean',
+
+        // ]);
+        // $foodItem = FoodItem::create($validated);
         return response()->json($foodItem,201);
     }
 
@@ -51,16 +75,39 @@ class FoodItemController extends Controller
     {
         $foodItem = FoodItem::findOrFail($id);
 
-        $validated = $request->validate([
-            'restaurant_id' => 'sometimes|exists:restaurants,id',
-            'category_id' =>'sometimes|exists:categories,id',
-            'name'=>'sometimes|string|max:100',
+        $validated = Validator::make($request->all(),[
+            'restaurant_id' => 'required|exists:restaurants,id',
+            'category_id' =>'required|exists:categories,id',
+            'name'=>'required|string|max:100',
             'description'=>'nullable|string|max:255',
-            'price' => 'sometimes|numeric|min:0',
+            'price' => 'required|numeric|min:0',
             'image_path'=>'nullable|string',
-            'is_available'=>'sometimes|boolean',
+            'is_available'=>'required|boolean',
         ]);
-        $foodItem->update($validated);
+
+        if($validated->fails()){
+            return response()->json($validated->errors(),400);
+        }
+        $foodItem->update([
+            'restaurant_id'=>$request->restaurant_id,
+            'category_id'=>$request->category_id,
+            'name'=>$request->name,
+            'description'=>$request->description,
+            'price'=>$request->price,
+            'image_path'=>$request->image_path,
+            'is_available'=>$request->is_available,
+                    ]);
+
+        // $validated = $request->validate([
+        //     'restaurant_id' => 'sometimes|exists:restaurants,id',
+        //     'category_id' =>'sometimes|exists:categories,id',
+        //     'name'=>'sometimes|string|max:100',
+        //     'description'=>'nullable|string|max:255',
+        //     'price' => 'sometimes|numeric|min:0',
+        //     'image_path'=>'nullable|string',
+        //     'is_available'=>'sometimes|boolean',
+        // ]);
+        // $foodItem->update($validated);
         return response()->json($foodItem);
     }
 
