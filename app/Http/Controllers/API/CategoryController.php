@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -21,11 +22,24 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'restaurant_id' => 'required|exists: restaurants,id',
-            'name' => 'required|string| max:255',
+        $validated = Validator::make($request->all(),[
+        'restaurant_id' => 'required|exists:restaurants,id',
+        'name' => 'required|string| max:255',
         ]);
-        $category = Category::create($validated);
+
+        if($validated->fails()){
+            return response()->json($validated->errors(),400);
+        }
+        $category = Category::create([
+            'restaurant_id'=>$request->restaurant_id,
+            'name'=>$request->name,
+                    ]);
+
+        // $validated = $request->validate([
+        //     'restaurant_id' => 'required|exists: restaurants,id',
+        //     'name' => 'required|string| max:255',
+        // ]);
+        // $category = Category::create($validated);
         return response()->json($category,201);
     }
 
@@ -44,11 +58,24 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $category = Category::findOrFail($id);
-        $validated = $request->validate([
-            'restaurant_id' => 'sometimes|exists: restaurants,id',
-            'name' => 'sometimes|string| max:255',
+
+        $validated = Validator::make($request->all(),[
+            'restaurant_id' => 'required|exists:restaurants,id',
+            'name' => 'required|string| max:255',
         ]);
-        $category->update($validated);
+
+        if($validated->fails()){
+            return response()->json($validated->errors(),400);
+        }
+        // $validated = $request->validate([
+        //     'restaurant_id' => 'sometimes|exists: restaurants,id',
+        //     'name' => 'sometimes|string| max:255',
+        // ]);
+        // $category->update($validated);
+        $category->update([
+            'restaurant_id'=>$request->restaurant_id,
+            'name'=>$request->name,
+                    ]);
         return response()->json($category);
     }
 
