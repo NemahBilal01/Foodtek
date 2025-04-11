@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('delivery_trackings', function (Blueprint $table) {
+        Schema::create('delivery_tracking', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->decimal('latitude', 10, 8)->nullable();
