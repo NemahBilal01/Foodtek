@@ -9,6 +9,7 @@ class DeliveryTracking extends Model
 {
     /** @use HasFactory<\Database\Factories\DeliveryTrackingFactory> */
     use HasFactory, SoftDeletes;
+    protected $table = "delivery_tracking";
 
     protected $fillable = [
         'order_id',

@@ -11,6 +11,7 @@ class DeliveryStatus extends Model
     /** @use HasFactory<\Database\Factories\DeliveryStatusFactory> */
     use HasFactory;
 
+    protected $table = "delivery_statuses";
     protected $fillable =[
         'order_id',
         'status',
