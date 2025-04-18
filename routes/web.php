@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DeliveryStatusesController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\SocialAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -32,8 +34,7 @@ Route::resource('payments', PaymentController::class);
 Route::get('/', [UserController::class, 'index'])->name('users.index');
 Route::post('users', [UserController::class, 'store'])->name('users.store');
 
-/*
+// /*
 Route::get('/', function () {
     return view('welcome');
 });
-*/
