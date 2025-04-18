@@ -81,28 +81,27 @@ class AuthController extends Controller
     }
 
     public function resetPassword(ResetPasswordRequest $request)
-{
-    // Retrieve validated data from the request
-    $data = $request->validated();
-
-    // Retrieve the user by email
-    $user = User::where('email', $data['email'])->first();
-
-    // Check if the user exists
-    if (!$user) {
+    {
+        // The validated data will automatically be available
+        $data = $request->validated();
+    
+        $user = User::where('email', $data['email'])->first();
+    
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+    
+        // Hash the new password before saving
+        $user->password = Hash::make($data['password']);
+        $user->save();
+    
         return response()->json([
-            'message' => 'User not found'
-        ], 404);
+            'message' => 'Password reset successful'
+        ], 200);
     }
-
-    // Assign the new password directly (will be hashed automatically)
-    $user->password = $data['password'];
-    $user->save();
-
-    return response()->json([
-        'message' => 'Password reset successful'
-    ], 200);
-}
+    
 
 // public function updateProfile(UpdateProfileRequest $request)
 // {
