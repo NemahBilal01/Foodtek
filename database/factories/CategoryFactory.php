@@ -20,6 +20,7 @@ class CategoryFactory extends Factory
         // $category=;
         return [
             'name' => fake()->unique()->randomElement(['Sandwiches', 'Burger', 'Pasta', 'Pizza', 'shawrma', 'waffle', 'cake']),
+            'image'=>fake()->imageUrl('640','450' ,'food'),
             'restaurant_id'=>Restaurant::inRandomOrder()->first()->id,
         ];
     }

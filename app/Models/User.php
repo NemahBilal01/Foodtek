@@ -54,28 +54,32 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+//user has many notifications
     public function notifications():HasMany
     {
         return $this->hasMany(Notification::class);
     }
-
+//user has many orders
     public function orders():HasMany
     {
         return $this->hasMany(Order::class);
     }
-
+//user has many cartItems
     public function cartItems():HasMany
     {
         return $this->hasMany(CartItem::class);
     }
-
+//user has many restaurants
     public function restaurants():HasMany
     {
         return $this->hasMany(Restaurant::class);
     }
-
+//user has many addresses
     public function addresses() {
         return $this->hasMany(Address::class);
+    }
+// user has many ratings
+    public function ratings():HasMany{
+        return $this->hasMany(Rating::class);
     }
 }

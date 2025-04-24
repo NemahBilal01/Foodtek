@@ -6,7 +6,7 @@ use App\Models\SpecialOffer;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SpoecialOfferSeeder extends Seeder
+class SpecialOfferSeeder extends Seeder
 {
     /**
      * Run the database seeds.
