@@ -137,7 +137,6 @@ class AuthController extends Controller
             'email' => [trans($status)],
         ]);
     }
-
 // public function updateProfile(UpdateProfileRequest $request)
 // {
 //     $user = auth()->user();
