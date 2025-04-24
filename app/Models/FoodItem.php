@@ -25,7 +25,7 @@ class FoodItem extends Model
         'price' => 'decimal:2',
         'is_available' => 'boolean',
     ];
-    
+
     public function cartItems():HasMany
     {
         return $this->hasMany(CartItem::class);
@@ -41,5 +41,9 @@ class FoodItem extends Model
     public function category():BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+    public function specialOffer():HasMany
+    {
+        return $this->hasMany(SpecialOffer::class);
     }
 }
