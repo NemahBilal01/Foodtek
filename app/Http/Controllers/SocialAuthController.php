@@ -41,6 +41,7 @@ class SocialAuthController extends Controller
             //if every thing is fine
             $googleUser = $googleResponse->json();
 
+            // dd($googleUser);
             //update or create user data
 
             $user = User::updateOrCreate(

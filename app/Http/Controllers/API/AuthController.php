@@ -11,6 +11,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -19,12 +20,15 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
-            'email' => 'required|string|email|max:150|unique:users,email',
-            'birthday' => 'required|date',
+            'email' => ['required','string','email','max:150','unique:users,email',
+                    'regex:/@((gmail|yahoo|hotmail|outlook)\.com)$/i',],
+            'birthday' =>'required|date|before_or_equal:' . Carbon::now()->subYears(16)->format('Y-m-d'),
             'phone' => 'required|string|max:15',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => ['required','string','min:6','confirmed',
+            'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/',
+    ],
         ]);
-
+//'birthday' => 'required|date',
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
@@ -38,7 +42,7 @@ class AuthController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'User Registered Successfully',
+            'message' => 'Your Account has been Created',
             'User' => $user
         ], 201);
     }
@@ -84,24 +88,24 @@ class AuthController extends Controller
     {
         // The validated data will automatically be available
         $data = $request->validated();
-    
+
         $user = User::where('email', $data['email'])->first();
-    
+
         if (!$user) {
             return response()->json([
                 'message' => 'User not found'
             ], 404);
         }
-    
+
         // Hash the new password before saving
         $user->password = Hash::make($data['password']);
         $user->save();
-    
+
         return response()->json([
             'message' => 'Password reset successful'
         ], 200);
     }
-    
+
 
 // public function updateProfile(UpdateProfileRequest $request)
 // {
