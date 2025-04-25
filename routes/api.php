@@ -64,3 +64,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/login/google/token', [SocialAuthController::class, 'loginWithGmailToken']);
 //login with facebook
 Route::post('/login/facebook/token', [SocialAuthController::class, 'loginWithFacebookToken']);
+
+//routes for the password reset and verification
+Route::post('password/reset', [AuthController::class, 'resetPassword']);
+Route::get('reset-password/{token}', [AuthController::class, 'verifyResetPasswordToken']);
+Route::post('forgot-password', [AuthController::class, 'sendResetToken']);
