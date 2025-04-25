@@ -23,6 +23,7 @@ use App\Http\Controllers\API\FoodItemController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\api\SpecialOfferController;
+use App\Models\FoodItem;
 use App\Models\SpecialOffer;
 
 Route::get('/user', function (Request $request) {
@@ -36,6 +37,7 @@ Route::apiResource('categories', CategoryController::class);
 Route::apiResource('delivery-statuses', DeliveryStatusesController::class);
 Route::apiResource('delivery-tracking', DeliveryTrackingController::class);
 Route::apiResource('food-items', FoodItemController::class);
+Route::get('top-recommended', [FoodItemController::class,'recommended']);
 Route::apiResource('restaurant', RestaurantController::class);
 Route::apiResource('payment', PaymentController::class);
 Route::apiResource('order', OrderController::class);

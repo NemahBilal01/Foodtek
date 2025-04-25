@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\FoodItem;
 use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -11,7 +12,15 @@ class RatingController extends Controller
 {
     // return top 10 rated
     public function index(){
-        return Rating::orderBy('rate' ,'desc')->take(10)->get();
+    //     $foodITem= FoodItem::first();
+    //     // dd($foodITem->ratings);Rating::orderBy('rate' ,'desc')->take(10)->get();
+    $topFoods = FoodItem::with(['ratings' => function ($query) {
+        $query->orderBy('rate', 'desc')->limit(1);
+    }])
+    ->take(10)
+    ->get();
+
+    return response()->json(['topFood'=>$topFoods]);
     }
 
     public function store(Request $request){
