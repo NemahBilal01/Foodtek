@@ -25,21 +25,33 @@ class FoodItem extends Model
         'price' => 'decimal:2',
         'is_available' => 'boolean',
     ];
-    
+// food item has many cart items
     public function cartItems():HasMany
     {
         return $this->hasMany(CartItem::class);
     }
-    public function orderItems():HasMany
+    // food item has many order items
+     public function orderItems():HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
+    // every food item belongs to one restaurants
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class);
     }
+    // one food item belongs to one category
     public function category():BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+    // food item has many special offer
+    public function specialOffer():HasMany
+    {
+        return $this->hasMany(SpecialOffer::class);
+    }
+// food item has many ratings
+    public function ratings():HasMany{
+        return $this->hasMany(Rating::class);
     }
 }

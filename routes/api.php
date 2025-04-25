@@ -21,6 +21,9 @@ use App\Http\Controllers\API\DeliveryStatusesController;
 use App\Http\Controllers\API\DeliveryTrackingController;
 use App\Http\Controllers\API\FoodItemController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\api\SpecialOfferController;
+use App\Models\SpecialOffer;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -38,6 +41,8 @@ Route::apiResource('payment', PaymentController::class);
 Route::apiResource('order', OrderController::class);
 Route::apiResource('orderItem', OrderItemController::class);
 Route::apiResource('notification', NotificationController::class);
+Route::apiResource('specialOffer',SpecialOfferController::class);
+Route::apiResource('rating',RatingController::class);
 //auth routes
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
