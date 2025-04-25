@@ -11,8 +11,6 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
-// use Illuminate\Support\Carbon;
-// use Illuminate\Support\Facades\Validator;
 
 
 class AuthController extends Controller
