@@ -13,9 +13,10 @@ use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Password;
+// use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+// use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -87,56 +88,6 @@ class AuthController extends Controller
         ]);
     }
 
-    public function resetPasswordWithToken(Request $request)
-    {
-        $request->validate([
-            'token' => 'required',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $passwordReset = DB::table('password_resets')->where('token', $request->token)->first();
-
-        if (!$passwordReset) {
-            return response()->json([
-                'message' => 'Invalid or expired token'
-            ], 400);
-        }
-
-        $user = User::where('email', $passwordReset->email)->first();
-
-        if (!$user) {
-            return response()->json([
-                'message' => 'User not found'
-            ], 404);
-        }
-
-        $user->password = Hash::make($request->password);
-        $user->save();
-        DB::table('password_resets')->where('token', $request->token)->delete();
-
-        return response()->json([
-            'message' => 'Password reset successful'
-        ], 200);
-    }
-
-    public function sendResetToken(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-        ]);
-
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
-
-        if ($status === Password::RESET_LINK_SENT) {
-            return response()->json(['message' => __($status)], 200);
-        }
-
-        throw ValidationException::withMessages([
-            'email' => [trans($status)],
-        ]);
-    }
 // public function updateProfile(UpdateProfileRequest $request)
 // {
 //     $user = auth()->user();
