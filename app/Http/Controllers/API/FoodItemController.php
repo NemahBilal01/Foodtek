@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\CartItem;
+use App\Models\Category;
 use App\Models\FoodItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -67,6 +68,7 @@ class FoodItemController extends Controller
     public function show(string $id)
     {
         $foodItem = FoodItem::findOrFail($id);
+
         return response()->json($foodItem);
     }
 
@@ -122,6 +124,7 @@ class FoodItemController extends Controller
         $foodItem->delete();
         return response()->json(['message' => 'Food Item deleted successfully.'], 200);
     }
+    // get top 10 recommended food
 
     public function recommended(){
         // get the top food item id
@@ -132,5 +135,20 @@ class FoodItemController extends Controller
         // get food item data from there id's
         $TopRecommended = FoodItem::whereIn('id' , $TopFoodId)->get();
         return response()->json(['TopRecommended' => $TopRecommended]);
+    }
+
+    //get food item under category
+    public function FoodUnderCategory(string $id){
+        $category = Category::find($id);
+
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+        if($category->is_active === false){
+            return response()->json(['message' => 'Category is not active'], 404);
+        }
+        
+        $foodItem = FoodItem::where('category_id', $category->id)->get();
+        return  response()->json(['foodItem' => $foodItem]);
     }
 }

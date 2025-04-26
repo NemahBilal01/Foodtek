@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\DeliveryStatues;
+use App\Models\ItemOption;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
             PaymentSeeder::class,
             RatingSeeder::class,
             SpecialOfferSeeder::class,
+            ItemOptionSeeder::class,
 
         ]);
 

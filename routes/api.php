@@ -40,6 +40,7 @@ Route::apiResource('delivery-statuses', DeliveryStatusesController::class);
 Route::apiResource('delivery-tracking', DeliveryTrackingController::class);
 Route::apiResource('food-items', FoodItemController::class);
 Route::get('top-recommended', [FoodItemController::class,'recommended']);
+Route::get('food-under-category/{id}', [FoodItemController::class,'FoodUnderCategory']);
 Route::apiResource('restaurant', RestaurantController::class);
 Route::apiResource('payment', PaymentController::class);
 Route::apiResource('order', OrderController::class);
