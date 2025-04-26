@@ -1,20 +1,18 @@
 <?php
 
 namespace Database\Seeders;
-use App\Models\SpecialOffer;
+
+use App\Models\Rating;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SpecialOfferSeeder extends Seeder
+class RatingSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run()
+    public function run(): void
     {
-        SpecialOffer::factory()->count(10)->create();
+        Rating::factory(20)->create();
     }
-    
-
-    
 }

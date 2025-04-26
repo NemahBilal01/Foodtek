@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\CartItem;
 use App\Models\FoodItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class FoodItemController extends Controller
@@ -119,5 +121,16 @@ class FoodItemController extends Controller
         $foodItem = FoodItem::findOrFail($id);
         $foodItem->delete();
         return response()->json(['message' => 'Food Item deleted successfully.'], 200);
+    }
+
+    public function recommended(){
+        // get the top food item id
+        $TopFoodId = CartItem::select('food_item_id' , DB::raw('COUNT(*) as total'))
+        ->groupBy('food_item_id')->orderBy('total' , 'desc')
+        ->limit(10)->pluck('food_item_id');
+
+        // get food item data from there id's
+        $TopRecommended = FoodItem::whereIn('id' , $TopFoodId)->get();
+        return response()->json(['TopRecommended' => $TopRecommended]);
     }
 }

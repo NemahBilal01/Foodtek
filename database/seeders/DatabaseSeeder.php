@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             DeliveryStatuesSeeder::class,
             DeliveryTrackingSeeder::class,
             PaymentSeeder::class,
+            RatingSeeder::class,
             SpecialOfferSeeder::class,
 
         ]);
