@@ -18,6 +18,9 @@ class Rating extends Model
     'review'
 ];
 
+protected $casts = [
+    'rate' => 'float',
+];
 // every rating belong to one user
     public function user() : BelongsTo {
         return $this->belongsTo(User::class);

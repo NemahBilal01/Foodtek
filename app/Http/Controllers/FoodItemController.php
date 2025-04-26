@@ -23,7 +23,7 @@ class FoodItemController extends Controller
     {
         $restaurants = Restaurant::all();
         $categories = Category::all();
-    
+
         return view('foodItems.create', compact('restaurants', 'categories'));
     }
 
@@ -53,6 +53,7 @@ class FoodItemController extends Controller
     public function show(string $id)
     {
         $foodItem = FoodItem::findOrFail($id);
+
         return view('foodItems.show', compact('foodItem'));
     }
 
@@ -64,7 +65,7 @@ class FoodItemController extends Controller
         $foodItem = FoodItem::with(['restaurant', 'category'])->findOrFail($id);
         $restaurants = Restaurant::all();
         $categories = Category::all();
-    
+
         return view('foodItems.edit', compact('foodItem', 'restaurants', 'categories'));
     }
 
@@ -82,7 +83,7 @@ class FoodItemController extends Controller
             'image_path' => 'nullable|string',
             'is_available' => 'required|boolean',
         ]);
-    
+
         $foodItem = FoodItem::findOrFail($id);
         $foodItem->update([
             'name' => $request->name,
@@ -93,10 +94,10 @@ class FoodItemController extends Controller
             'image_path' => $request->image_path,
             'is_available' => $request->is_available,
         ]);
-    
+
         return redirect()->route('foodItems.index')->with('success', 'Food Item updated successfully!');
     }
-    
+
     /**
      * Remove the specified resource from storage.
      */

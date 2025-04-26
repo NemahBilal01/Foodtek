@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             RestaurantSeeder::class,
             CategorySeeder::class,
+            ItemOptionSeeder::class,
             FoodItemSeeder::class,
             CartItemSeeder::class,
             OrderSeeder::class,
@@ -31,7 +32,7 @@ class DatabaseSeeder extends Seeder
             PaymentSeeder::class,
             RatingSeeder::class,
             SpecialOfferSeeder::class,
-            ItemOptionSeeder::class,
+
 
         ]);
 
