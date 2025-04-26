@@ -67,7 +67,23 @@ class FoodItemController extends Controller
      */
     public function show(string $id)
     {
-        $foodItem = FoodItem::with('specialOffers','ratings')->findOrFail($id);
+        // $foodItem = FoodItem::with('specialOffers','ratings')->findOrFail($id);
+        $foodItem = DB::table('food_items')
+        ->join('ratings' , 'food_items.id' , '='  , 'ratings.food_item_id')
+        ->join('special_offers' , 'food_items.id' ,'=' , 'special_offers.food_item_id')
+        ->select('food_items.image_path', 'food_items.name_en','food_items.Description_en','food_items.price' ,'ratings.review',
+        DB::raw('AVG(ratings.rate) as rating'),
+        DB::raw('food_items.price - (food_items.price * special_offers.discount_percentage / 100) as price_after_discount')
+        )
+        ->where('food_items.id' , '=',$id)
+        ->where('food_items.is_available' , '=',true)
+        ->groupBy('food_items.id',
+        'food_items.image_path',
+        'food_items.name_en',
+        'food_items.Description_en',
+        'food_items.price',
+        'special_offers.discount_percentage',
+        'ratings.review')->get();
 
         return response()->json($foodItem);
     }

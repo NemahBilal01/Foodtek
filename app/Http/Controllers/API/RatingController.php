@@ -27,9 +27,9 @@ class RatingController extends Controller
     // $topFoods = DB::table('food_items')
     // ->join('ratings','food_items.id' , '=' , 'ratings.food_item_id')
     // ->select('food_items.*' ,'food_items.id','ratings.food_item_id', DB::raw('AVG(rate) as rating'))
-    // ->groupBy('food_item_id')
+    // ->groupBy('food_item_id','food_items.'*)
     // ->orderBy('rating' , 'desc')->take('10')->get();
-    //->join('special_offer' , 'food_items.id' , '=' , 'special_offer.food_item_id')
+    // ->join('special_offer' , 'food_items.id' , '=' , 'special_offer.food_item_id')
 
     return response()->json(['topFood'=>$topFoods]);
     }
