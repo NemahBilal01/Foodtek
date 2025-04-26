@@ -6,19 +6,30 @@ use App\Http\Controllers\Controller;
 use App\Models\FoodItem;
 use App\Models\Rating;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class RatingController extends Controller
 {
     // return top 10 rated
     public function index(){
-    //     $foodITem= FoodItem::first();
-    //     // dd($foodITem->ratings);Rating::orderBy('rate' ,'desc')->take(10)->get();
-    $topFoods = FoodItem::with(['ratings' => function ($query) {
-        $query->orderBy('rate', 'desc')->limit(1);
-    }])
+    // $topFoods = FoodItem::with(['ratings' => function ($query) {
+    //     $query->orderBy('rate', 'desc')->limit(1);
+    // }])
+    // ->take(10)
+    // ->get();
+
+    $topFoods = FoodItem::withAvg('ratings', 'rate')
+    ->orderByDesc('ratings_avg_rate')
     ->take(10)
     ->get();
+
+    // $topFoods = DB::table('food_items')
+    // ->join('ratings','food_items.id' , '=' , 'ratings.food_item_id')
+    // ->select('food_items.*' ,'food_items.id','ratings.food_item_id', DB::raw('AVG(rate) as rating'))
+    // ->groupBy('food_item_id')
+    // ->orderBy('rating' , 'desc')->take('10')->get();
+    //->join('special_offer' , 'food_items.id' , '=' , 'special_offer.food_item_id')
 
     return response()->json(['topFood'=>$topFoods]);
     }

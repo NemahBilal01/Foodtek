@@ -11,11 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('item_options', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->string('name_ar')->unique();
+            $table->string('name_en')->unique();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+        });
+
         Schema::create('food_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('restaurant_id');
             $table->unsignedBigInteger('category_id');
-            $table->foreignId('item_option_id')->constrained('item_options')->onDelete('cascade');
+            $table->unsignedBigInteger('item_option_id');
             $table->string('name_ar')->unique();
             $table->string('name_en')->unique();
             $table->text('description_ar')->nullable();
@@ -25,6 +34,7 @@ return new class extends Migration
             $table->boolean('is_available')->default(true);
             $table->timestamps();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('item_option_id')->references('id')->on('item_options')->onDelete('cascade');
             $table->foreign('restaurant_id')->references('id')->on('restaurants')->onDelete('cascade');
         });
     }
@@ -35,5 +45,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('food_items');
+        Schema::dropIfExists('item_options');
     }
 };
