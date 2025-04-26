@@ -68,6 +68,7 @@ class FoodItemController extends Controller
     public function show(string $id)
     {
         $foodItem = FoodItem::findOrFail($id);
+
         return response()->json($foodItem);
     }
 
@@ -143,7 +144,10 @@ class FoodItemController extends Controller
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
-
+        if($category->is_active === false){
+            return response()->json(['message' => 'Category is not active'], 404);
+        }
+        
         $foodItem = FoodItem::where('category_id', $category->id)->get();
         return  response()->json(['foodItem' => $foodItem]);
     }

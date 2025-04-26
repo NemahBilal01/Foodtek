@@ -12,12 +12,15 @@ class FoodItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'description',
+        'name_ar',
+        'name_en',
+        'description_ar',
+        'description_en',
         'price',
         'image_path',
         'category_id',
         'restaurant_id',
+        'item_option_id',
         'is_available'
     ];
 
@@ -46,7 +49,7 @@ class FoodItem extends Model
         return $this->belongsTo(Category::class);
     }
     // food item has many special offer
-    public function specialOffer():HasMany
+    public function specialOffers():HasMany
     {
         return $this->hasMany(SpecialOffer::class);
     }

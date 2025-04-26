@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('restaurant_id');
             $table->unsignedBigInteger('category_id');
-            $table->string('name');
-            $table->text('description')->nullable();
+            $table->foreignId('item_option_id')->constrained('item_options')->onDelete('cascade');
+            $table->string('name_ar')->unique();
+            $table->string('name_en')->unique();
+            $table->text('description_ar')->nullable();
+            $table->text('description_en')->nullable();
             $table->decimal('price', 10, 2);
             $table->string('image_path')->nullable();
             $table->boolean('is_available')->default(true);
