@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
             PaymentSeeder::class,
             RatingSeeder::class,
             SpecialOfferSeeder::class,
-
+            FavoriteSeeder::class,
 
         ]);
 
