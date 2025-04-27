@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\api\SpecialOfferController;
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\HistoryController;
 use App\Http\Controllers\Api\RatingController;
 use App\Models\FoodItem;
 use App\Models\SpecialOffer;
@@ -35,7 +36,16 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('user' , UserController::class);
 Route::apiResource('addresses', AddressController::class);
+
 Route::apiResource('cart-items', CartItemController::class);
+Route::get('quantity_increment/{id}', [CartItemController::class,'updateQuantity']);
+Route::get('quantity_decrement/{id}', [CartItemController::class,'updateQuantity']);
+Route::get('cartItem', [CartItemController::class,'cartItem']);
+//history
+Route::get('get_user_orders/{id}',[HistoryController::class , 'getUserOrders']);
+Route::get('re_order/{FoodId}/user/{userId}',[HistoryController::class , 'reOrder']);
+
+
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('delivery-statuses', DeliveryStatusesController::class);
 Route::apiResource('delivery-tracking', DeliveryTrackingController::class);
@@ -44,6 +54,7 @@ Route::apiResource('delivery-tracking', DeliveryTrackingController::class);
 Route::apiResource('food-items', FoodItemController::class);
 Route::get('top-recommended', [FoodItemController::class,'recommended']);
 Route::get('food-under-category/{id}', [FoodItemController::class,'FoodUnderCategory']);
+Route::get('ItemDetail/{id}', [FoodItemController::class,'ItemDetail']);
 
 Route::apiResource('restaurant', RestaurantController::class);
 Route::apiResource('payment', PaymentController::class);
