@@ -29,6 +29,10 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function foodItems()
+    {
+    return $this->hasManyThrough(FoodItem::class, OrderItem::class, 'order_id', 'id', 'id', 'food_item_id');
+    }
     public function payment():HasMany{
         return $this->hasMany(Payment::class);
     }
