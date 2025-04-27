@@ -20,8 +20,8 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\DeliveryStatusesController;
 use App\Http\Controllers\API\DeliveryTrackingController;
 use App\Http\Controllers\API\FoodItemController;
-use App\Http\Controllers\FavoriteController;
-use App\Http\Controllers\SpecialOfferController;
+use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\api\SpecialOfferController;
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RatingController;
@@ -32,29 +32,30 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 
 })->middleware('auth:sanctum');
+
 Route::apiResource('user' , UserController::class);
 Route::apiResource('addresses', AddressController::class);
 Route::apiResource('cart-items', CartItemController::class);
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('delivery-statuses', DeliveryStatusesController::class);
 Route::apiResource('delivery-tracking', DeliveryTrackingController::class);
+
+//routes for food item
 Route::apiResource('food-items', FoodItemController::class);
 Route::get('top-recommended', [FoodItemController::class,'recommended']);
 Route::get('food-under-category/{id}', [FoodItemController::class,'FoodUnderCategory']);
+
 Route::apiResource('restaurant', RestaurantController::class);
 Route::apiResource('payment', PaymentController::class);
 Route::apiResource('order', OrderController::class);
 Route::apiResource('orderItem', OrderItemController::class);
 Route::apiResource('notification', NotificationController::class);
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/favorites', [FavoriteController::class, 'index']);
-    Route::post('/favorites', [FavoriteController::class, 'store']);
-    Route::delete('/favorites/{item_id}', [FavoriteController::class, 'destroy']);
-});
-Route::get('/special-offers', [SpecialOfferController::class, 'index']);
 
-Route::apiResource('specialOffer',SpecialOfferController::class);
+Route::apiResource('favorites',FavoriteController::class);
+Route::get('/special-offers', [SpecialOfferController::class, 'index']);
 Route::apiResource('rating',RatingController::class);
+
+
 //auth routes
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
