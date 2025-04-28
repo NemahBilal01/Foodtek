@@ -16,7 +16,7 @@ class Payment extends Model
         'amount',
         'payment_method',
         'status',
-        'transaction_id',
+        // 'transaction_id',
     ];
 
     protected $casts = [
@@ -26,5 +26,9 @@ class Payment extends Model
     public function order():BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function paymentMethods(){
+        return $this->hasMany(PaymentMethod::class);
     }
 }

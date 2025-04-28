@@ -20,9 +20,11 @@ class AddressFactory extends Factory
         return [
             'user_id'=>User::inRandomOrder()->first()->id,
             'address_line'=>fake()->streetAddress(),
-            'country'=>fake()->country(),
-            'state'=>fake()->country(),
+            'description'=>fake()->sentence(),
+            'province'=>fake()->country(),
             'city'=>fake()->city(),
             'zip_code'=>fake()->postcode(),        ];
     }
+
+    
 }

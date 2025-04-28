@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderItemController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\PaymentMethodController;
 use App\Http\Controllers\Api\RestaurantController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\SocialAuthController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\api\SpecialOfferController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HistoryController;
 use App\Http\Controllers\Api\RatingController;
+use App\Models\CartItem;
 use App\Models\FoodItem;
 use App\Models\SpecialOffer;
 
@@ -35,17 +37,21 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('user' , UserController::class);
+//address route
 Route::apiResource('addresses', AddressController::class);
+Route::get('user_location/{id}',[ AddressController::class , "userLocation"]);
 
+//cart item routes
 Route::apiResource('cart-items', CartItemController::class);
 Route::get('quantity_increment/{id}', [CartItemController::class,'updateQuantity']);
 Route::get('quantity_decrement/{id}', [CartItemController::class,'updateQuantity']);
 Route::get('cartItem', [CartItemController::class,'cartItem']);
+Route::get('get_carts_summary/user/{userId}',[CartItemController::class , 'getCartSummary']);
 //history
 Route::get('get_user_orders/{id}',[HistoryController::class , 'getUserOrders']);
-Route::get('re_order/{FoodId}/user/{userId}',[HistoryController::class , 'reOrder']);
+Route::get('re_order/food_item/{FoodId}/user/{userId}',[HistoryController::class , 'reOrder']);
 
-
+//category routes
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('delivery-statuses', DeliveryStatusesController::class);
 Route::apiResource('delivery-tracking', DeliveryTrackingController::class);
@@ -57,7 +63,11 @@ Route::get('food-under-category/{id}', [FoodItemController::class,'FoodUnderCate
 Route::get('ItemDetail/{id}', [FoodItemController::class,'ItemDetail']);
 
 Route::apiResource('restaurant', RestaurantController::class);
+
 Route::apiResource('payment', PaymentController::class);
+Route::get('payment_method/user/{id}', [PaymentMethodController::class , 'index']);
+Route::post('payment_method', [PaymentMethodController::class , 'store']);
+
 Route::apiResource('order', OrderController::class);
 Route::apiResource('orderItem', OrderItemController::class);
 Route::apiResource('notification', NotificationController::class);
