@@ -16,8 +16,13 @@ class AddressController extends Controller
     public function index()
     {
         return Address::all();
+        
         //return Address::with('user')->get();
         //return Address::paginate(10);
+    }
+    public function userLocation(string $id){
+       $userLocation = Address::where('user_id','=',$id)->get();
+       return response()->json($userLocation);
     }
 
     /**
@@ -29,8 +34,8 @@ class AddressController extends Controller
         $validated = Validator::make($request->all(),[
             'user_id' => 'required|exists:users,id',
             'address_line' => 'required|string|max:255',
-            'country' => 'required|string|max:100',
-            'state' => 'required|string|max:100',
+            'description' => 'required|string|max:100',
+            'province' => 'required|string|max:100',
             'city' => 'required|string|max:100',
             'zip_code' => 'required|string|max:20',
         ]);
@@ -42,8 +47,8 @@ class AddressController extends Controller
             $address = Address::create([
                 'user_id'=>$request->user_id,
                 'address_line'=>$request->address_line,
-                'country'=>$request->country,
-                'state'=>$request->state,
+                'description'=>$request->description,
+                'province'=>$request->province,
                 'city'=>$request->city,
                 'zip_code'=>$request->zip_code,
                         ]);
@@ -60,7 +65,7 @@ class AddressController extends Controller
 
         // $address = Address::create($validated);
 
-        return response()->json($address, 201);
+        return response()->json([$address, 'message'=>'“New Delivery Address Has been Added'], 201);
     }
 
     /**

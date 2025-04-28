@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\CartItem;
+use App\Models\FoodItem;
+use App\Models\SpecialOffer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -108,39 +110,44 @@ class CartItemController extends Controller
 
     // get all food item from cart 
     $cartItems = CartItem::with('foodItem')->where('user_id', $userId)->get();
-
+// dd($cartItems);
     if ($cartItems->isEmpty()) {
         return response()->json(['message' => 'Cart is empty']);
+     }
+//  return ($cartItems);
+   
+    // calculate Delivery Charge
+    $distanceKm = $request->input('distance_km'); //
+    $deliveryCharge = 0.50 + (0.13 * $distanceKm);
+
+    // calculate discount if there .
+    $totalDiscount = 0;
+    $subtotal = 0;
+    foreach ($cartItems as $item) {
+        $itemPrice = $item->foodItem->price;
+        $itemTotal = $itemPrice * $item->quantity;
+        $subtotal += $itemTotal;
+    
+        // Get special offer if exists for this food item
+        $offer = SpecialOffer::where('food_item_id', $item->food_item_id)->first();
+    // dd($offer->discount_percentage);
+        if ($offer) {
+            // apply discount only for this item's total
+            $itemDiscount = $itemTotal * ($offer->discount_percentage / 100);
+            $totalDiscount += $itemDiscount;
+        }
     }
 
-    // //  calculate Subtotal
-    // $subtotal = 0;
+    // after all we calculate the total price
+    $total = ($subtotal + $deliveryCharge) - $totalDiscount;
 
-    // foreach ($cartItems as $item) {
-    //     $subtotal += $item->foodItem->price * $item->quantity;
-    // }
+    return response()->json([
+        'subtotal' => round($subtotal, 2),
+        'delivery_charge' => round($deliveryCharge, 2),
+        'discount' => round($totalDiscount, 2),
+        'total_price' => round($total, 2)
+    ]);
 
-    // // calculate Delivery Charge
-    // $distanceKm = $request->input('distance_km'); //
-    // $deliveryCharge = 0.50 + (0.13 * $distanceKm);
-
-    // // calculate discount if there .
-    // $discount = 0;
-
-    
-    // if ($request->has('discount_percentage')) {
-    //     $discount = ($subtotal + $deliveryCharge) * ($request->discount_percentage / 100);
-    // }
-
-    // // 5. المجموع النهائي
-    // $total = ($subtotal + $deliveryCharge) - $discount;
-
-    // return response()->json([
-    //     'subtotal' => round($subtotal, 2),
-    //     'delivery_charge' => round($deliveryCharge, 2),
-    //     'discount' => round($discount, 2),
-    //     'total_price' => round($total, 2)
-    // ]);
 }
 
 

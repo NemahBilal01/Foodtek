@@ -15,7 +15,7 @@ class PaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $id)
     {
         return  Payment::all();
 
@@ -47,7 +47,7 @@ class PaymentController extends Controller
                 'transaction_id'=>$request->transaction,
             ]);
 
-            return response()->json($payment , 201);
+            return response()->json([$payment , 201 , 'message'=> 'your order done successfully']);
 
         }
 

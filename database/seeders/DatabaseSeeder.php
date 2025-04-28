@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\DeliveryStatues;
 use App\Models\ItemOption;
+use App\Models\PaymentMethod;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -33,6 +34,7 @@ class DatabaseSeeder extends Seeder
             RatingSeeder::class,
             SpecialOfferSeeder::class,
             FavoriteSeeder::class,
+            PaymentMethod::class ,
 
         ]);
 
