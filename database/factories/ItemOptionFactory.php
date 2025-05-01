@@ -19,7 +19,7 @@ class ItemOptionFactory extends Factory
     {
         return [
             'category_id'=>Category::inRandomOrder()->first()->id,
-            'name_ar'=>fake()->unique()->randomElement(['عصير','خبز','خس','جبنة','مايونيز','كاتشب']),
+            'name_ar' => fake()->unique()->word(),
             'name_en'=>fake()->unique()->randomElement(['Juice','Bread','Lettuce','Cheese','Mayonnaise','Ketchup']),
             'is_active'=>fake()->boolean(),
         ];

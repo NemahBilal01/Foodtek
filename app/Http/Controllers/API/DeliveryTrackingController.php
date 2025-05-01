@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryTracking;
 use Illuminate\Http\Request;
+use App\Events\DeliveryLocationUpdated;
+
 
 class DeliveryTrackingController extends Controller
 {
@@ -21,13 +23,22 @@ class DeliveryTrackingController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'order_id' => 'required|exists:orders,id',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
+        $request->validate([
+            'order_id' => 'required|integer',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'last_updated_at' => 'required|date',
         ]);
-        $deliveryTracking = DeliveryTracking::create($validated);
-        return response()->json($deliveryTracking,201);
+    
+        $tracking = DeliveryTracking::create($request->all());
+    
+        event(new DeliveryLocationUpdated(
+            $tracking->order_id,
+            $tracking->latitude,
+            $tracking->longitude
+        ));
+    
+        return response()->json(['message' => 'Delivery Tracking created successfully.','data' => $tracking], 201);
     }
 
     /**
@@ -44,14 +55,23 @@ class DeliveryTrackingController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $deliveryTracking = DeliveryTracking::findOrFail($id);
-        $validated = $request->validate([
-            'order_id' => 'sometimes|exists:orders,id',
-            'latitude' => 'sometimes|numeric|between:-90,90',
-            'longitude' => 'sometimes|numeric|between:-180,180',
+        $request->validate([
+            'order_id' => 'required|integer',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'last_updated_at' => 'required|date',
         ]);
-        $deliveryTracking->update($validated);
-        return response()->json($deliveryTracking);
+    
+        $deliveryTrack = DeliveryTracking::findOrFail($id);
+        $deliveryTrack->update($request->all());
+    
+        event(new DeliveryLocationUpdated(
+            $deliveryTrack->order_id,
+            $deliveryTrack->latitude,
+            $deliveryTrack->longitude
+        ));
+        return response()->json(['message' => 'Delivery Tracking created successfully.','data' => $deliveryTrack], 201);
+        
     }
 
     /**

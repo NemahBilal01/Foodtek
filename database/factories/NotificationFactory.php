@@ -19,6 +19,7 @@ class NotificationFactory extends Factory
     {
         return [
             'user_id'=>User::inRandomOrder()->first()->id,
+            'title' => fake()->sentence(4),
             'message'=>fake()->sentence(),
             'is_read'=>fake()->boolean(),
             'read_at'=>now(),

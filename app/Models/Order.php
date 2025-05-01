@@ -51,4 +51,15 @@ class Order extends Model
     {
         return $this->hasOne(DeliveryStatus::class)->latestOfMany();
     }
+    public function chats()
+    {
+        return $this->hasMany(Chat::class, 'sender_id');
+    }
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+  
+
 }

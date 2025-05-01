@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Notifications\OrderRated;
 
 class OrderController extends Controller
 {
-    //Filtering & Sorting orders
     public function index(Request $request)
     {
         $query = Order::query();
@@ -49,29 +49,19 @@ class OrderController extends Controller
         return response()->json($order, 201);
     }
 
-    /**
-     * Display the specified resource.
-     * To show the details & to include related models ('items', 'payment', 'latestStatus')
-     */
     public function show(string $id)
     {
         $order = Order::with('items', 'payment', 'latestStatus')->findOrFail($id);
         return response()->json($order);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $order = Order::findOrFail($id);
         return view('orders.edit', compact('order'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     * to modify an existing order
-     */
+
     public function update(Request $request, string $id)
     {
         $order = Order::findOrFail($id);
@@ -87,14 +77,28 @@ class OrderController extends Controller
         return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * to delete an order
-     */
+    public function getDriverPhone($orderId)
+    {
+        $order = Order::with('driver')->findOrFail($orderId);
+        return response()->json(['phone' => $order->driver->phone]);
+    }
+
+
+    public function completeOrder($orderId)
+    {
+        $order = Order::findOrFail($orderId);
+        $user = $order->user;
+        $user->notify(new OrderRated($order));
+
+        return response()->json([
+            'message' => 'Order delivered, notification sent for rating.'
+        ]);
+    }
+
     public function destroy(string $id)
     {
         $order = Order::findOrFail($id);
-        $order->delete(); // Soft delete by default
+        $order->delete();
     
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\FoodItem;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,10 +20,12 @@ class RatingFactory extends Factory
     public function definition(): array
     {
         return [
-            'food_item_id'=>FoodItem::inRandomOrder()->first()->id,
-            'user_id'=>User::inRandomOrder()->first()->id,
-            'rate'=>fake()->numberBetween(1,5),
-            'review'=>fake()->sentence(),
+            'order_id' => Order::factory(),
+            'user_id' => User::factory(),
+            'delivery_man_id' => User::factory(),
+            'order_rating' => $this->faker->numberBetween(1, 5),
+            'delivery_rating' => $this->faker->numberBetween(1, 5),
+            'feedback' => $this->faker->sentence,
         ];
     }
 }

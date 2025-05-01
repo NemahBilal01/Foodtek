@@ -12,9 +12,19 @@ class NotificationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Notification::all();
+        $status = $request->get('status', 'all');
+
+        if ($status == 'unread') {
+            $notifications = Notification::where('is_read', false)->get();
+        } elseif ($status == 'read') {
+            $notifications = Notification::where('is_read', true)->get();
+        } else {
+            $notifications = Notification::all(); 
+        }
+
+        return response()->json($notifications);
     }
 
     /**
@@ -25,64 +35,44 @@ class NotificationController extends Controller
         $validated = Validator::make($request->all(), [
             'user_id'=>'required|numeric',
             'message'=>'required|max:255',
+            'title' => 'required|string|max:255',
             'is_read'=>'required|boolean',
             'read_at'=>'required|date',
         ]);
+
         if($validated->fails()){
             return response()->json($validated->errors() , 400);
         }
 
-
-
         $notification = Notification::create([
                 'user_id'=>$request->user_id,
                 'message'=>$request->message,
+                'title' => $request->title,
                 'is_read'=>$request->is_read,
                 'read_at'=>$request->read_at,
             ]);
 
             return response()->json($notification , 201);
-
     }
 
     /**
-     * Display the specified resource.
+     * Mark a notification as read.
      */
-    public function show(Notification $notification)
+    public function markAsRead($id)
     {
-        return response()->json($notification);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Notification $notification)
-    {
-
-        $validated = Validator::make($request->all(), [
-            'user_id'=>'required|numeric',
-            'message'=>'required|max:255',
-            'is_read'=>'required|boolean',
-            'read_at'=>'required',
+        $notification = Notification::findOrFail($id);
+        $notification->update([
+            'is_read' => true,
+            'read_at' => now(),
         ]);
 
-        if($validated->fails()){
-            return response()->json($validated->errors() , 400);
-        }
-
-            $notification->update([
-                'user_id'=>$request->user_id,
-                'message'=>$request->message,
-                'is_read'=>$request->is_read,
-                'read_at'=>$request->read_at,
-            ]);
-
-            return response()->json($notification);
+        return response()->json($notification);
     }
 
     /**
      * Remove the specified resource from storage.
      */
+
     public function destroy(Notification $notification)
     {
         $notification->delete();
