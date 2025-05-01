@@ -1,105 +1,90 @@
 <?php
 
-use App\Http\Controllers\Api;
-use App\Http\Controllers\Api\NotificationController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\OrderItemController;
+use App\Http\Controllers\Api\CartItemController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\FoodItemController;
+use App\Http\Controllers\Api\ClientTrackOrderController;
+use App\Http\Controllers\SocialAuthController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PaymentMethodController;
 use App\Http\Controllers\Api\RestaurantController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\SocialAuthController;
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Payment;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AddressController;
-use App\Http\Controllers\API\CartItemController;
-use App\Http\Controllers\API\CategoryController;
-use App\Http\Controllers\API\DeliveryStatusesController;
-use App\Http\Controllers\API\DeliveryTrackingController;
-use App\Http\Controllers\API\FoodItemController;
-use App\Http\Controllers\Api\FavoriteController;
-use App\Http\Controllers\api\SpecialOfferController;
-
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\HistoryController;
-use App\Http\Controllers\Api\RatingController;
-use App\Models\CartItem;
-use App\Models\FoodItem;
-use App\Models\SpecialOffer;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-
-})->middleware('auth:sanctum');
-
-Route::apiResource('user' , UserController::class);
-//address route
-Route::apiResource('addresses', AddressController::class);
-Route::get('user_location/{id}',[ AddressController::class , "userLocation"]);
-
-//cart item routes
-Route::apiResource('cart-items', CartItemController::class);
-Route::get('quantity_increment/{id}', [CartItemController::class,'updateQuantity']);
-Route::get('quantity_decrement/{id}', [CartItemController::class,'updateQuantity']);
-Route::get('cartItem', [CartItemController::class,'cartItem']);
-Route::get('get_carts_summary/user/{userId}',[CartItemController::class , 'getCartSummary']);
-//history
-Route::get('get_user_orders/{id}',[HistoryController::class , 'getUserOrders']);
-Route::get('re_order/food_item/{FoodId}/user/{userId}',[HistoryController::class , 'reOrder']);
-
-//category routes
-Route::apiResource('categories', CategoryController::class);
-Route::apiResource('delivery-statuses', DeliveryStatusesController::class);
-Route::apiResource('delivery-tracking', DeliveryTrackingController::class);
-
-//routes for food item
-Route::apiResource('food-items', FoodItemController::class);
-Route::get('top-recommended', [FoodItemController::class,'recommended']);
-Route::get('food-under-category/{id}', [FoodItemController::class,'FoodUnderCategory']);
-Route::get('ItemDetail/{id}', [FoodItemController::class,'ItemDetail']);
-
-Route::apiResource('restaurant', RestaurantController::class);
-
-Route::apiResource('payment', PaymentController::class);
-Route::get('payment_method/user/{id}', [PaymentMethodController::class , 'index']);
-Route::post('payment_method', [PaymentMethodController::class , 'store']);
-
-Route::apiResource('order', OrderController::class);
-Route::apiResource('orderItem', OrderItemController::class);
-Route::apiResource('notification', NotificationController::class);
-
-Route::apiResource('favorites',FavoriteController::class);
-Route::get('/special-offers', [SpecialOfferController::class, 'index']);
-Route::apiResource('rating',RatingController::class);
+use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\RatingController;
+use App\Http\Controllers\Api\SpecialOfferController;
 
 
-//auth routes
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
-Route::post('reset-password', [AuthController::class, 'resetPassword']);
+// Auth routes
+Route::controller(AuthController::class)->group(function () {
+    Route::post('register', 'register');
+    Route::post('login', 'login');
+    Route::post('logout', 'logout')->middleware('auth:sanctum');
+    Route::post('reset-password', 'resetPassword');
+    Route::post('forgot-password', 'sendResetToken');
+    Route::get('reset-password/{token}', 'verifyResetPasswordToken');
+});
 
-// Route with Sanctum
+// Social Auth
+Route::controller(SocialAuthController::class)->group(function () {
+    Route::post('/login/google/token', 'loginWithGmailToken');
+    Route::post('/login/facebook/token', 'loginWithFacebookToken');
+});
+
+// Routes requiring authentication
 Route::middleware('auth:sanctum')->group(function () {
-    // Route::get('/user', function (Request $request) {
-    //     return $request->user();
-    // });
-    Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/user/profile', [UserController::class, 'updateProfile']);
 });
 
-//Route::post('addresses/{id}/restore', [AddressController::class, 'restore']);
+// User Routes
+Route::apiResource('user', UserController::class)->only(['show', 'update']); //show and update
 
+// Cart Items
+Route::prefix('cart-items')->controller(CartItemController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('{cart_item}', 'show');
+    Route::put('{cart_item}', 'update');
+    Route::delete('{cart_item}', 'destroy');
+    Route::get('/increment/{id}', 'updateQuantity');
+    Route::get('/decrement/{id}', 'updateQuantity');
+});
 
-//login with gmail
-Route::post('/login/google/token', [SocialAuthController::class, 'loginWithGmailToken']);
-//login with facebook
-Route::post('/login/facebook/token', [SocialAuthController::class, 'loginWithFacebookToken']);
+// Orders
+Route::apiResource('order', OrderController::class)->only(['index', 'store', 'show']);
+ // Track Order Route
+Route::get('/client/track-order/{order_id}', [ClientTrackOrderController::class, 'trackOrder']);
 
-//routes for the password reset and verification
-Route::post('password/reset', [AuthController::class, 'resetPassword']);
-Route::get('reset-password/{token}', [AuthController::class, 'verifyResetPasswordToken']);
-Route::post('forgot-password', [AuthController::class, 'sendResetToken']);
+// Categories & Food Items
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
+Route::apiResource('food-items', FoodItemController::class)->only(['index', 'show']);
+Route::get('top-recommended', [FoodItemController::class, 'recommended']);
+Route::get('food-under-category/{id}', [FoodItemController::class, 'FoodUnderCategory']);
+
+// Notifications
+Route::apiResource('notification', NotificationController::class)->only(['index', 'show']);
+Route::post('notifications/{id}/markAsRead', [NotificationController::class, 'markAsRead']);
+
+// Payment
+Route::apiResource('payment', PaymentController::class)->only(['index', 'store']);
+Route::get('payment_method/user/{id}', [PaymentMethodController::class, 'index']);
+Route::post('payment_method', [PaymentMethodController::class, 'store']);
+
+// Restaurant
+Route::apiResource('restaurant', RestaurantController::class)->only(['index', 'show']);
+
+// Chat
+Route::middleware('auth:sanctum')->post('/chat/{orderId}', [ChatController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/chat/archive/{orderId}', [ChatController::class, 'archiveChat']);
+
+// Ratings
+Route::post('/rate-order', [RatingController::class, 'store']);
+Route::post('/ratings', [RatingController::class, 'store']);
+
+// Special Offers (if applicable for the mobile app)
+Route::get('/special-offers', [SpecialOfferController::class, 'index']);
+

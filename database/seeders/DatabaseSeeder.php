@@ -34,7 +34,8 @@ class DatabaseSeeder extends Seeder
             RatingSeeder::class,
             SpecialOfferSeeder::class,
             FavoriteSeeder::class,
-            PaymentMethod::class ,
+            PaymentMethodSeeder::class,
+            ChatSeeder::class,
 
         ]);
 

@@ -13,11 +13,17 @@ return new class extends Migration
     {
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('food_item_id')->constrained('food_items')->onDelete('cascade');
-            $table->decimal('rate' , 5 , 1);
-            $table->string('review')->nullable();
+            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('delivery_man_id');
+            $table->integer('order_rating')->nullable();
+            $table->integer('delivery_rating')->nullable();
+            $table->text('feedback')->nullable();
             $table->timestamps();
+    
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('delivery_man_id')->references('id')->on('users');
         });
     }
 

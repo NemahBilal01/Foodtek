@@ -17,6 +17,7 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">user_id</th>
+                <th scope="col">title</th>
                 <th scope="col">message</th>
                 <th scope="col">is_read</th>
                 <th scope="col">read_at	</th>
@@ -29,11 +30,12 @@
               <tr>
               @foreach ($notifications as $notification )
                 <th scope="row"> {{ $notification->id  }}</th>
-                <td> {{ $notification->user_id }}</td>
-                <td>  {{ $notification->message }}</td>
-                <td> {{  $notification->is_read }}</td>
-                <td> {{  $notification->read_at }}</td>
-                <td> {{  $notification->deleted_at }}</td>
+                <td>{{ $notification->notifiable_id }}</td>
+                <td>Order Rated</td>
+                <td>{{ $notification->data['message'] ?? 'No message' }}</td>
+                <td>{{ $notification->read_at ? 'Yes' : 'No' }}</td>
+                <td>{{ $notification->read_at }}</td>
+                <td>{{ $notification->deleted_at }}</td>
                 <td>
                     <!--<a class="btn btn-primary" href="#" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Edit</a>-->
                     <form action="{{ route('notifications.destroy', $notification->id) }}" method="POST" style="display:inline;">

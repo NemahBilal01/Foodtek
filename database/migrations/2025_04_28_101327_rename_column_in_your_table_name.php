@@ -6,27 +6,31 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('addresses', function (Blueprint $table) {
-            $table->renameColumn('country', 'description');
-            $table->renameColumn('state', 'province');
-        });
+        if (Schema::hasTable('addresses')) {
+            Schema::table('addresses', function (Blueprint $table) {
+                if (Schema::hasColumn('addresses', 'country')) {
+                    $table->renameColumn('country', 'description');
+                }
+                if (Schema::hasColumn('addresses', 'state')) {
+                    $table->renameColumn('state', 'province');
+                }
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('addresses', function (Blueprint $table) {
-
-            Schema::table('users', function (Blueprint $table) {
-                $table->renameColumn('new_name', 'old_name');
+        if (Schema::hasTable('addresses')) {
+            Schema::table('addresses', function (Blueprint $table) {
+                if (Schema::hasColumn('addresses', 'description')) {
+                    $table->renameColumn('description', 'country');
+                }
+                if (Schema::hasColumn('addresses', 'province')) {
+                    $table->renameColumn('province', 'state');
+                }
             });
-        });
+        }
     }
 };

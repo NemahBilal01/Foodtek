@@ -11,22 +11,26 @@ class Rating extends Model
     /** @use HasFactory<\Database\Factories\RatingFactory> */
     use HasFactory;
 
-    protected $fillable=[
-    'user_id',
-    'food_item_id',
-    'rate',
-    'review'
-];
+    protected $fillable = [
+        'order_id', 
+        'user_id', 
+        'delivery_man_id', 
+        'order_rating', 
+        'delivery_rating', 
+        'feedback'
+    ];
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 
-protected $casts = [
-    'rate' => 'float',
-];
-// every rating belong to one user
-    public function user() : BelongsTo {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-// every rating belong to one food item
-    public function foodItem() : BelongsTo {
-        return $this->belongsTo(FoodItem::class);
+
+    public function deliveryMan()
+    {
+        return $this->belongsTo(User::class, 'delivery_man_id');
     }
 }

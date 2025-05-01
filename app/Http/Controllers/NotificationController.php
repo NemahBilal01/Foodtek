@@ -10,32 +10,8 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::all();  // Fetch all notifications
+        $notifications = Notification::all();
         return view('notifications.index', compact('notifications'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
@@ -52,7 +28,19 @@ class NotificationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $notification = Notification::findOrFail($id);
+        $notification->update($request->all());
+        return redirect()->route('notifications.index')->with('success', 'Notification updated successfully');
+    }
+    
+    /**
+     * Mark a notification as read.
+     */
+    public function markAsRead($id)
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->update(['is_read' => true, 'read_at' => now()]);
+        return redirect()->route('notifications.index')->with('success', 'Notification marked as read');
     }
 
     /**
@@ -65,4 +53,5 @@ class NotificationController extends Controller
     
         return redirect()->route('notifications.index')->with('success', 'Notification deleted successfully');
     }
+
 }
