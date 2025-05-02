@@ -66,7 +66,9 @@ Route::get('top-recommended', [FoodItemController::class, 'recommended']);
 Route::get('food-under-category/{id}', [FoodItemController::class, 'FoodUnderCategory']);
 
 // Notifications
-Route::apiResource('notification', NotificationController::class)->only(['index', 'show']);
+// Route::apiResource('notification/{id}', NotificationController::class)->only(['index', 'show']);
+Route::post('notification/{id}',[NotificationController::class,'index']);
+Route::post('notification',[NotificationController::class,'store']);
 Route::post('notifications/{id}/markAsRead', [NotificationController::class, 'markAsRead']);
 
 // Payment

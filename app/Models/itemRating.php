@@ -17,7 +17,7 @@ class itemRating extends Model
         'review'
     ];
 
-    public function foodITem():BelongsTo{
+    public function foodItem():BelongsTo{
         return $this->belongsTo(FoodItem::class);
     }
 }
