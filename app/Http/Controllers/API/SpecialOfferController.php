@@ -10,15 +10,17 @@ use Illuminate\Support\Carbon;
 
 class SpecialOfferController extends Controller
 {
-    public function index(){
-        
-        $today = Carbon::today();
     
+    //get all the activated discount
+    public function index(){
+
+        $today = Carbon::today();
+
         $offers = SpecialOffer::where('is_active', true)
             ->where('start_date', '<=', $today)
             ->where('end_date', '>=', $today)
             ->get();
-    
-        return response()->json($offers);
+
+        return response()->json(['offers'=>$offers]);
     }
 }

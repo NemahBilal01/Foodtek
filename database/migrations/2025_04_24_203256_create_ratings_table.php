@@ -16,11 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('delivery_man_id');
-            $table->integer('order_rating')->nullable();
-            $table->integer('delivery_rating')->nullable();
+            $table->decimal('order_rating' , 2 ,1)->nullable();
+            $table->decimal('delivery_rating' ,2 , 1)->nullable();
             $table->text('feedback')->nullable();
             $table->timestamps();
-    
+
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('delivery_man_id')->references('id')->on('users');

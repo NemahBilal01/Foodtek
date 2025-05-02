@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PaymentMethodController;
 use App\Http\Controllers\Api\RestaurantController;
 use App\Http\Controllers\Api\ChatController;
-use App\Http\Controllers\RatingController;
+use App\Http\Controllers\Api\RatingController ;
 use App\Http\Controllers\Api\SpecialOfferController;
 
 
@@ -84,6 +84,7 @@ Route::middleware('auth:sanctum')->post('/chat/archive/{orderId}', [ChatControll
 // Ratings
 Route::post('/rate-order', [RatingController::class, 'store']);
 Route::post('/ratings', [RatingController::class, 'store']);
+ROute::get('/rating',[RatingController::class , 'index']);
 
 // Special Offers (if applicable for the mobile app)
 Route::get('/special-offers', [SpecialOfferController::class, 'index']);
