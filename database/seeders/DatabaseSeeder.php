@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             DeliveryTrackingSeeder::class,
             PaymentSeeder::class,
             RatingSeeder::class,
+            ItemRatingSeeder::class,
             SpecialOfferSeeder::class,
             FavoriteSeeder::class,
             PaymentMethodSeeder::class,

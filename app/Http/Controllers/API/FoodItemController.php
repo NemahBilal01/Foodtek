@@ -68,7 +68,7 @@ class FoodItemController extends Controller
     public function ItemDetail(string $food_id)
     {
         //show food item details, avg rating and price after discount
-        
+
         $foodItem = DB::table('food_items')
         ->join('ratings' , 'food_items.id' , '='  , 'ratings.food_item_id')
         ->join('special_offers' , 'food_items.id' ,'=' , 'special_offers.food_item_id')
@@ -151,6 +151,7 @@ class FoodItemController extends Controller
 
         // get food item data from there id's
         $TopRecommended = FoodItem::whereIn('id' , $TopFoodId)->get();
+        
         return response()->json(['TopRecommended' => $TopRecommended]);
     }
 
