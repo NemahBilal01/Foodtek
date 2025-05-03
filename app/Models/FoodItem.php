@@ -55,6 +55,6 @@ class FoodItem extends Model
     }
 // food item has many ratings
     public function ratings():HasMany{
-        return $this->hasMany(Rating::class);
+        return $this->hasMany(itemRating::class);
     }
 }

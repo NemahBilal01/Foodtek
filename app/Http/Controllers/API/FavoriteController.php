@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Validator;
 
 class FavoriteController extends Controller
 {
-   //show all the user favorites 
-    public function show(string $id){
+   //show all the user favorites
+    public function index(string $id){
 
         $favorites =  Favorite::where('user_id','=',$id)->get();
         return response()->json(['favorites'=>$favorites]);
@@ -30,7 +30,7 @@ class FavoriteController extends Controller
 
         $favorite = Favorite::create([
             'user_id'=>$request->user_id,
-            'food_item_id' => $request->food_item_id, 
+            'food_item_id' => $request->food_item_id,
            ]);
 
         return response()->json(['message'=>'favorite added successfully' ,'favorite'=>$favorite]);

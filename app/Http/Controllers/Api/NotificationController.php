@@ -12,16 +12,18 @@ class NotificationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request , string $id)
     {
         $status = $request->get('status', 'all');
 
         if ($status == 'unread') {
-            $notifications = Notification::where('is_read', false)->get();
+            $notifications = Notification::where('is_read', false)
+            ->where('user_id',$id)->get();
         } elseif ($status == 'read') {
-            $notifications = Notification::where('is_read', true)->get();
+            $notifications = Notification::where('is_read', true)
+            ->where('user_id' ,$id)->get();
         } else {
-            $notifications = Notification::all(); 
+            $notifications = Notification::where('user_id' ,$id)->get();
         }
 
         return response()->json($notifications);

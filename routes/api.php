@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\RatingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
@@ -15,9 +16,8 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PaymentMethodController;
 use App\Http\Controllers\Api\RestaurantController;
 use App\Http\Controllers\Api\ChatController;
-use App\Http\Controllers\RatingController;
+use App\Http\Controllers\Api\ItemRatingController ;
 use App\Http\Controllers\Api\SpecialOfferController;
-
 
 // Auth routes
 Route::controller(AuthController::class)->group(function () {
@@ -66,7 +66,9 @@ Route::get('top-recommended', [FoodItemController::class, 'recommended']);
 Route::get('food-under-category/{id}', [FoodItemController::class, 'FoodUnderCategory']);
 
 // Notifications
-Route::apiResource('notification', NotificationController::class)->only(['index', 'show']);
+// Route::apiResource('notification/{id}', NotificationController::class)->only(['index', 'show']);
+Route::post('notification/{id}',[NotificationController::class,'index']);
+Route::post('notification',[NotificationController::class,'store']);
 Route::post('notifications/{id}/markAsRead', [NotificationController::class, 'markAsRead']);
 
 // Payment
@@ -84,7 +86,12 @@ Route::middleware('auth:sanctum')->post('/chat/archive/{orderId}', [ChatControll
 // Ratings
 Route::post('/rate-order', [RatingController::class, 'store']);
 Route::post('/ratings', [RatingController::class, 'store']);
+ROute::get('/rating',[ItemRatingController::class , 'index']);
 
 // Special Offers (if applicable for the mobile app)
 Route::get('/special-offers', [SpecialOfferController::class, 'index']);
+
+//favorite list
+Route::get('/favorites/{id}' ,[FavoriteController::class , 'index']);
+Route::post('/favorites' ,[FavoriteController::class , 'store']);
 

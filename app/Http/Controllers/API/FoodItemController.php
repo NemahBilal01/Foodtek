@@ -65,26 +65,33 @@ class FoodItemController extends Controller
     /**
      * Display the specified resource.
      */
-    public function ItemDetail(string $food_id)
+    public function show(string $food_id)
     {
         //show food item details, avg rating and price after discount
-        
+
         $foodItem = DB::table('food_items')
-        ->join('ratings' , 'food_items.id' , '='  , 'ratings.food_item_id')
+        ->join('item_ratings' , 'food_items.id' , '='  , 'item_ratings.food_item_id')
         ->join('special_offers' , 'food_items.id' ,'=' , 'special_offers.food_item_id')
-        ->select('food_items.image_path', 'food_items.name_en','food_items.Description_en','food_items.price' ,'ratings.review',
-        DB::raw('AVG(ratings.rate) as rating'),
-        DB::raw('food_items.price - (food_items.price * special_offers.discount_percentage / 100) as price_after_discount')
+        ->select(
+            'food_items.image_path',
+            'food_items.name_en',
+            'food_items.Description_en',
+            'food_items.price',
+            DB::raw('ROUND(AVG(item_ratings.rate), 2) as rating'),
+            DB::raw('food_items.price - (food_items.price * special_offers.discount_percentage / 100) as price_after_discount'),
+            DB::raw('COUNT(item_ratings.review) as numberOfReview')
         )
-        ->where('food_items.id' , '=',$food_id)
-        ->where('food_items.is_available' , '=',true)
-        ->groupBy('food_items.id',
-        'food_items.image_path',
-        'food_items.name_en',
-        'food_items.Description_en',
-        'food_items.price',
-        'special_offers.discount_percentage',
-        'ratings.review')->get();
+        ->where('food_items.id', $food_id)
+        ->where('food_items.is_available', true)
+        ->groupBy(
+            'food_items.id',
+            'food_items.image_path',
+            'food_items.name_en',
+            'food_items.Description_en',
+            'food_items.price',
+            'special_offers.discount_percentage'
+        )
+        ->first();
 
         return response()->json($foodItem);
     }
@@ -151,6 +158,7 @@ class FoodItemController extends Controller
 
         // get food item data from there id's
         $TopRecommended = FoodItem::whereIn('id' , $TopFoodId)->get();
+
         return response()->json(['TopRecommended' => $TopRecommended]);
     }
 
