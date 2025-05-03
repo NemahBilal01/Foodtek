@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\HistoryController;
 use App\Http\Controllers\Api\RatingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -50,13 +51,14 @@ Route::prefix('cart-items')->controller(CartItemController::class)->group(functi
     Route::get('{cart_item}', 'show');
     Route::put('{cart_item}', 'update');
     Route::delete('{cart_item}', 'destroy');
-    Route::get('/increment/{id}', 'updateQuantity');
-    Route::get('/decrement/{id}', 'updateQuantity');
+    // Route::get('/increment/{id}', 'updateQuantity');
+    // Route::get('/decrement/{id}', 'updateQuantity');
 });
 
-// Orders
+// Orders & history
 Route::apiResource('order', OrderController::class)->only(['index', 'store', 'show']);
- // Track Order Route
+Route::get('get_user_orders/{user_id}' , [HistoryController::class , 'getUserOrders']);
+// Track Order Route
 Route::get('/client/track-order/{order_id}', [ClientTrackOrderController::class, 'trackOrder']);
 
 // Categories & Food Items
@@ -94,4 +96,5 @@ Route::get('/special-offers', [SpecialOfferController::class, 'index']);
 //favorite list
 Route::get('/favorites/{id}' ,[FavoriteController::class , 'index']);
 Route::post('/favorites' ,[FavoriteController::class , 'store']);
+Route::delete('/favorites/{id}' ,[FavoriteController::class , 'destroy']);
 
