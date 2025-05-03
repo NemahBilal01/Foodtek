@@ -36,9 +36,9 @@ class FavoriteController extends Controller
         return response()->json(['message'=>'favorite added successfully' ,'favorite'=>$favorite]);
     }
 
-    public function destroy(Favorite $favorite){
-
-        $favorite->delete();
+    public function destroy(string $id){
+        $delete = Favorite::findOrFail($id);
+        $delete->delete();
         return response()->json(['message'=>'favorite remove successfully']);
     }
 }

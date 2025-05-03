@@ -18,7 +18,7 @@ class CartItemController extends Controller
     public function index()
     {
         return CartItem::all();
-        
+
     }
 
     public function cartItem(){
@@ -65,7 +65,7 @@ class CartItemController extends Controller
     //     ->where('user_id','=',$id)->get();
         $cartItem = DB::table('food_items')
         ->join('cart_items', 'food_items.id' , '=' , 'cart_items.food_item_id')
-        ->select('food_items.id','food_items.image_path' , 'food_items.name_en' , 'food_items.price' , 'cart_items.quantity')
+        ->select('food_items.id','food_items.image_path' , 'food_items.name_en' , 'food_items.name_ar' ,'food_items.description_en' ,'food_items.description_ar', 'food_items.price' , 'cart_items.quantity')
         ->where('cart_items.user_id' ,'=' ,$user_id)
         ->get();
 
@@ -77,7 +77,7 @@ class CartItemController extends Controller
      */
     public function updateQuantity(Request $request, string $id)
     {
-        
+
         $cartItem = CartItem::findOrFail($id);
         $validated = Validator::make($request->all(),[
             'user_id' => 'required|exists:users,id',
@@ -108,14 +108,14 @@ class CartItemController extends Controller
 {
 
 
-    // get all food item from cart 
+    // get all food item from cart
     $cartItems = CartItem::with('foodItem')->where('user_id', $userId)->get();
 // dd($cartItems);
     if ($cartItems->isEmpty()) {
         return response()->json(['message' => 'Cart is empty']);
      }
 //  return ($cartItems);
-   
+
     // calculate Delivery Charge
     $distanceKm = $request->input('distance_km'); //
     $deliveryCharge = 0.50 + (0.13 * $distanceKm);
@@ -127,7 +127,7 @@ class CartItemController extends Controller
         $itemPrice = $item->foodItem->price;
         $itemTotal = $itemPrice * $item->quantity;
         $subtotal += $itemTotal;
-    
+
         // Get special offer if exists for this food item
         $offer = SpecialOffer::where('food_item_id', $item->food_item_id)->first();
     // dd($offer->discount_percentage);
