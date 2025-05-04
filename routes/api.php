@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\HistoryController;
 use App\Http\Controllers\Api\RatingController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\CartItemController;
