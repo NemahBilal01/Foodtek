@@ -15,7 +15,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
-use Illuminate\Support\Carbo
+use Illuminate\Support\Carbo;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Password;
 
