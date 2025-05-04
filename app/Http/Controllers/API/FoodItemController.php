@@ -69,31 +69,56 @@ class FoodItemController extends Controller
     {
         //show food item details, avg rating and price after discount
 
-        $foodItem = DB::table('food_items')
-        ->join('item_ratings' , 'food_items.id' , '='  , 'item_ratings.food_item_id')
-        ->join('special_offers' , 'food_items.id' ,'=' , 'special_offers.food_item_id')
-        ->select(
-            'food_items.image_path',
-            'food_items.name_en',
-            'food_items.Description_en',
-            'food_items.price',
-            DB::raw('ROUND(AVG(item_ratings.rate), 2) as rating'),
-            DB::raw('food_items.price - (food_items.price * special_offers.discount_percentage / 100) as price_after_discount'),
-            DB::raw('COUNT(item_ratings.review) as numberOfReview')
-        )
-        ->where('food_items.id', $food_id)
-        ->where('food_items.is_available', true)
-        ->groupBy(
-            'food_items.id',
-            'food_items.image_path',
-            'food_items.name_en',
-            'food_items.Description_en',
-            'food_items.price',
-            'special_offers.discount_percentage'
-        )
-        ->first();
+        // $foodItem = DB::table('food_items')
+        // ->join('item_ratings' , 'food_items.id' , '='  , 'item_ratings.food_item_id')
+        // ->join('special_offers' , 'food_items.id' ,'=' , 'special_offers.food_item_id')
+        // ->select(
+        //     'food_items.image_path',
+        //     'food_items.name_en',
+        //     'food_items.Description_en',
+        //     'food_items.price',
+        //     DB::raw('ROUND(AVG(item_ratings.rate), 2) as rating'),
+        //     DB::raw('food_items.price - (food_items.price * special_offers.discount_percentage / 100) as price_after_discount'),
+        //     DB::raw('COUNT(item_ratings.review) as numberOfReview')
+        // )
+        // ->where('food_items.id', $food_id)
+        // ->where('food_items.is_available', true)
+        // ->groupBy(
+        //     'food_items.id',
+        //     'food_items.image_path',
+        //     'food_items.name_en',
+        //     'food_items.Description_en',
+        //     'food_items.price',
+        //     'special_offers.discount_percentage'
+        // )
+        // ->first();
 
-        return response()->json($foodItem);
+        // return response()->json($foodItem);
+
+         $foodItem = FoodItem::with('specialOffer')
+        ->withAvg('ratings', 'rate')
+        ->withCount([
+            'ratings as numberOfReview' => function ($query) {
+            $query->whereNotNull('review');
+        }
+        ])
+        ->where('id', $food_id)
+        ->where('is_available', true)
+        ->first();
+        $originalPrice = $foodItem->price;
+        $discount = $foodItem->specialOffer->discount_percentage ?? 0;
+        $priceAfterDiscount = $originalPrice - ($originalPrice * $discount / 100);
+
+            return response()->json([
+                'image_path' => $foodItem->image_path,
+                'name_en' => $foodItem->name_en,
+                'description_en' => $foodItem->Description_en,
+                'original_price' => $originalPrice,
+                'discount_percentage' => $discount,
+                'price_after_discount' => round($priceAfterDiscount, 2),
+                'rating' => round($foodItem->ratings_avg_rate, 2),
+                'numberOfReview' => $foodItem->numberOfReview,
+            ]);
     }
 
     /**
