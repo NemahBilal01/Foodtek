@@ -21,9 +21,8 @@ use App\Http\Controllers\Api\ItemRatingController ;
 use App\Http\Controllers\Api\SpecialOfferController;
 
 // Auth routes
-Route::post('register', [AuthController::class , 'register']);
 Route::controller(AuthController::class)->group(function () {
-    Route::post('', 'register');
+    Route::post('register', 'register');
     Route::post('login', 'login');
     Route::post('logout', 'logout')->middleware('auth:sanctum');
     Route::post('reset-password', 'resetPassword');
