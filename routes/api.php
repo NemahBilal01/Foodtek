@@ -12,7 +12,7 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\FoodItemController;
 use App\Http\Controllers\API\ClientTrackOrderController;
 use App\Http\Controllers\SocialAuthController;
-use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\PaymentMethodController;
 use App\Http\Controllers\API\RestaurantController;
