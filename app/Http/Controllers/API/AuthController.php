@@ -15,7 +15,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Carbo
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Password;
 
@@ -82,9 +82,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        
+
         $request->user()->currentAccessToken()->delete();
-    
+
         return response()->json([
             'message' => 'Logout successful'
         ]);
