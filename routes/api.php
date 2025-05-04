@@ -42,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // User Routes
-Route::apiResource('user', UserController::class)->only(['show', 'update']); //show and update
+Route::apiResource('user', UserController::class)->only(['index', 'show', 'update']); //show and update
 
 // Cart Items
 Route::prefix('cart-items')->controller(CartItemController::class)->group(function () {
