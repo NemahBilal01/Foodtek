@@ -95,8 +95,8 @@ class FoodItemController extends Controller
 
         // return response()->json($foodItem);
 
-         $foodItem = FoodItem::with('specialOffer')
-        ->withAvg('ratings', 'rate')
+         $foodItem = FoodItem::with('special_offers')
+        ->withAvg('item_ratings.rate')
         ->withCount([
             'ratings as numberOfReview' => function ($query) {
             $query->whereNotNull('review');
@@ -106,7 +106,7 @@ class FoodItemController extends Controller
         ->where('is_available', true)
         ->first();
         $originalPrice = $foodItem->price;
-        $discount = $foodItem->specialOffer->discount_percentage ?? 0;
+        $discount = $foodItem->specialOffers->discount_percentage ?? 0;
         $priceAfterDiscount = $originalPrice - ($originalPrice * $discount / 100);
 
             return response()->json([
