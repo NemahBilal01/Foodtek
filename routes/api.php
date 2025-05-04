@@ -34,7 +34,7 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(SocialAuthController::class)->group(function () {
     Route::post('/login/google/token', 'loginWithGmailToken');
     Route::post('/login/facebook/token', 'loginWithFacebookToken');
-    Route::post('/login/apple', 'loginWithAppleToken'];
+    Route::post('/login/apple', 'loginWithAppleToken');
 });
 
 // Routes requiring authentication
