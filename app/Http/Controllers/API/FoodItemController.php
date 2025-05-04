@@ -95,7 +95,7 @@ class FoodItemController extends Controller
 
         // return response()->json($foodItem);
 
-         $foodItem = FoodItem::with('special_offers')
+         $foodItem = FoodItem::with('specialOffers')
         ->withAvg('ratings','rate')
         ->withCount([
             'ratings as numberOfReview' => function ($query) {
