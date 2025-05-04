@@ -69,6 +69,7 @@ class FoodItemController extends Controller
     {
         //show food item details, avg rating and price after discount
 
+        $discount = FoodItem::with('specialOffers')->get();
         
         $foodItem = DB::table('food_items')
         ->join('item_ratings' , 'food_items.id' , '='  , 'item_ratings.food_item_id')
@@ -76,24 +77,11 @@ class FoodItemController extends Controller
         ->select('food_items.image_path','food_items.name_en','food_items.Description_en','food_items.price',
         DB::raw('ROUND(AVG(item_ratings.rate), 2) as rating'),
         DB::raw('COUNT(item_ratings.review) as numberOfReview'),
-         DB::raw('
-            CASE 
-                WHEN special_offers.discount_percentage IS NOT NULL 
-                THEN ROUND(food_items.price - (food_items.price * special_offers.discount_percentage / 100), 2)
-                ELSE food_items.price
-            END as price_after_discount
-        ')
+        DB::raw('food_items.price - (food_items.price * special_offers.discount_percentage / 100) as price_after_discount')
             )
         ->where('food_items.id', $food_id)
         ->where('food_items.is_available', true)
-        ->groupBy(
-            'food_items.id',
-            'food_items.image_path',
-            'food_items.name_en',
-            'food_items.Description_en',
-            'food_items.price',
-            'special_offers.discount_percentage'
-        )
+        ->groupBy('food_items.id','food_items.image_path','food_items.name_en','food_items.Description_en','food_items.price','special_offers.discount_percentage')
         ->first();
 
         return response()->json($foodItem);
