@@ -96,7 +96,7 @@ class FoodItemController extends Controller
         // return response()->json($foodItem);
 
          $foodItem = FoodItem::with('special_offers')
-        ->withAvg('item_ratings.rate','rate')
+        ->withAvg('ratings','rate')
         ->withCount([
             'ratings as numberOfReview' => function ($query) {
             $query->whereNotNull('review');
