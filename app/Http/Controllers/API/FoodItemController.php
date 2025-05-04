@@ -86,6 +86,7 @@ class FoodItemController extends Controller
                 ELSE food_items.price
             END as price_after_discount
         ')
+            )
         ->where('food_items.id', $food_id)
         ->where('food_items.is_available', true)
         ->groupBy(
