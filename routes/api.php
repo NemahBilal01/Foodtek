@@ -1,24 +1,24 @@
 <?php
 
-use App\Http\Controllers\Api\FavoriteController;
-use App\Http\Controllers\Api\HistoryController;
-use App\Http\Controllers\Api\RatingController;
+use App\Http\Controllers\API\FavoriteController;
+use App\Http\Controllers\API\HistoryController;
+use App\Http\Controllers\API\RatingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\CartItemController;
-use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\FoodItemController;
-use App\Http\Controllers\Api\ClientTrackOrderController;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\OrderController;
+use App\Http\Controllers\API\CartItemController;
+use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\FoodItemController;
+use App\Http\Controllers\API\ClientTrackOrderController;
 use App\Http\Controllers\SocialAuthController;
-use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\PaymentController;
-use App\Http\Controllers\Api\PaymentMethodController;
-use App\Http\Controllers\Api\RestaurantController;
-use App\Http\Controllers\Api\ChatController;
-use App\Http\Controllers\Api\ItemRatingController ;
-use App\Http\Controllers\Api\SpecialOfferController;
+use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\PaymentMethodController;
+use App\Http\Controllers\API\RestaurantController;
+use App\Http\Controllers\API\ChatController;
+use App\Http\Controllers\API\ItemRatingController ;
+use App\Http\Controllers\API\SpecialOfferController;
 
 // Auth routes
 Route::controller(AuthController::class)->group(function () {
