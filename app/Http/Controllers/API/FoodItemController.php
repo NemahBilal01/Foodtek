@@ -79,8 +79,13 @@ class FoodItemController extends Controller
             'food_items.price',
             DB::raw('ROUND(AVG(item_ratings.rate), 2) as rating'),
             DB::raw('food_items.price - (food_items.price * special_offers.discount_percentage / 100) as price_after_discount'),
-            DB::raw('COUNT(item_ratings.review) as numberOfReview')
-        )
+             DB::raw('
+            CASE 
+                WHEN special_offers.discount_percentage IS NOT NULL 
+                THEN ROUND(food_items.price - (food_items.price * special_offers.discount_percentage / 100), 2)
+                ELSE food_items.price
+            END as price_after_discount
+        ')
         ->where('food_items.id', $food_id)
         ->where('food_items.is_available', true)
         ->groupBy(
