@@ -25,9 +25,10 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
     Route::post('logout', 'logout')->middleware('auth:sanctum');
-    Route::post('reset-password', 'resetPassword');
+    Route::post('reset-password', [AuthController::class, 'resetPasswordWithToken']);
     Route::post('forgot-password', 'sendResetToken');
     Route::get('reset-password/{token}', 'verifyResetPasswordToken');
+    
 });
 
 // Social Auth
@@ -89,7 +90,7 @@ Route::middleware('auth:sanctum')->post('/chat/archive/{orderId}', [ChatControll
 // Ratings
 Route::post('/rate-order', [RatingController::class, 'store']);
 Route::post('/ratings', [RatingController::class, 'store']);
-ROute::get('/rating',[ItemRatingController::class , 'index']);
+Route::get('/rating',[ItemRatingController::class , 'index']);
 
 // Special Offers (if applicable for the mobile app)
 Route::get('/special-offers', [SpecialOfferController::class, 'index']);
