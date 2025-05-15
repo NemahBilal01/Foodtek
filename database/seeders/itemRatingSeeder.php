@@ -13,5 +13,5 @@ class ItemRatingSeeder extends Seeder
      */
     public function run(): void
     {
-        itemRating::factory(30)->create();    }
+        ItemRating::factory(30)->create();    }
 }
