@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class FoodItem extends Model
 {
@@ -49,9 +50,9 @@ class FoodItem extends Model
         return $this->belongsTo(Category::class);
     }
     // food item has many special offer
-    public function specialOffers():HasMany
+    public function specialOffer():HasOne
     {
-        return $this->hasMany(SpecialOffer::class);
+        return $this->hasOne(SpecialOffer::class);
     }
 // food item has many ratings
     public function ratings():HasMany{
