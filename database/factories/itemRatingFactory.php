@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ItemRating>
  */
-class itemRatingFactory extends Factory
+class ItemRatingFactory extends Factory
 {
     /**
      * Define the model's default state.
