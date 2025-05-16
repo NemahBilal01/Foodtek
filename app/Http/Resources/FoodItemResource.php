@@ -20,7 +20,7 @@ class FoodItemResource extends JsonResource
             // 'category_id' => $this->category_id,
             // 'name' => $this->when(app()->getLocale() === 'ar' && $this->name_ar, $this->name_ar, $this->name),
             // 'description' => $this->when(app()->getLocale() === 'ar' && $this->description_ar, $this->description_ar, $this->description),
-            'name_ar' => $this->name_er,
+            'name_ar' => $this->name_ar,
             'name_en' => $this->name_en,
             'description_en'=>$this->description_en,
             'description_ar'=>$this->description_ar,
