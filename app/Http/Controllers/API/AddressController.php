@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\AddressResource;
 
 class AddressController extends Controller
 {
@@ -15,14 +16,12 @@ class AddressController extends Controller
      */
     public function index()
     {
-        return Address::all();
-        
-        //return Address::with('user')->get();
-        //return Address::paginate(10);
+        return AddressResource::collection(Address::all());
     }
+
     public function userLocation(string $id){
-       $userLocation = Address::where('user_id','=',$id)->get();
-       return response()->json($userLocation);
+       $userLocation = Address::where('user_id', $id)->get();
+       return AddressResource::collection($userLocation);
     }
 
     /**
@@ -53,18 +52,6 @@ class AddressController extends Controller
                 'zip_code'=>$request->zip_code,
                         ]);
 
-
-        // $validated = $request->validate([
-        //     'user_id' => 'required|exists:users,id',
-        //     'address_line' => 'required|string|max:255',
-        //     'country' => 'required|string|max:100',
-        //     'state' => 'required|string|max:100',
-        //     'city' => 'required|string|max:100',
-        //     'zip_code' => 'required|string|max:20',
-        // ]);
-
-        // $address = Address::create($validated);
-
         return response()->json([$address, 'message'=>'“New Delivery Address Has been Added'], 201);
     }
 
@@ -75,8 +62,7 @@ class AddressController extends Controller
     public function show(string $id)
     {
         $address = Address::findOrFail($id);
-        return response()->json($address);
-        //return Address::with('user')->findOrFail($id);
+        return new AddressResource($address);
     }
 
     /**
@@ -111,13 +97,5 @@ class AddressController extends Controller
 
         return response()->json(['message' => 'Address deleted successfully.'], 200);
     }
-
-    //Soft Delete Recovery
-    /*public function restore($id)
-    {
-        $address = Address::withTrashed()->findOrFail($id);
-        $address->restore();
-        return response()->json(['message' => 'Address restored.']);
-    }*/
 
 }

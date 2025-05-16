@@ -1,44 +1,45 @@
 <?php
-
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\FavoriteResource;
 use App\Models\Favorite;
-use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class FavoriteController extends Controller
 {
-   //show all the user favorites
-    public function index(string $id){
-
-        $favorites =  Favorite::where('user_id','=',$id)->get();
-        return response()->json(['favorites'=>$favorites]);
+    // Show all the user's favorites
+    public function index(string $id)
+    {
+        $favorites = Favorite::where('user_id', $id)->get();
+        return FavoriteResource::collection($favorites);
     }
 
-    //store a new favorite
-    public function store(Request $request){
-
-        $validated = Validator::make($request->all() , [
-            'user_id'=>'required|exists:users,id',
-            'food_item_id'=>'required|exists:food_items,id',
+    // Store a new favorite
+    public function store(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'food_item_id' => 'required|exists:food_items,id',
         ]);
-        if($validated->fails()){
-            return response()->json(['error'=>$validated->errors()] , 402);
+
+        if ($validated->fails()) {
+            return response()->json(['error' => $validated->errors()], 422);
         }
 
-        $favorite = Favorite::create([
-            'user_id'=>$request->user_id,
-            'food_item_id' => $request->food_item_id,
-           ]);
+        $favorite = Favorite::create($request->only(['user_id', 'food_item_id']));
 
-        return response()->json(['message'=>'favorite added successfully' ,'favorite'=>$favorite]);
+        return (new FavoriteResource($favorite))
+            ->additional(['message' => 'Favorite added successfully']);
     }
 
-    public function destroy(string $id){
-        $delete = Favorite::findOrFail($id);
-        $delete->delete();
-        return response()->json(['message'=>'favorite remove successfully']);
+    // Remove a favorite
+    public function destroy(string $id)
+    {
+        $favorite = Favorite::findOrFail($id);
+        $favorite->delete();
+
+        return response()->json(['message' => 'Favorite removed successfully']);
     }
 }

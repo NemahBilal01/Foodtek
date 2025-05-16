@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Http\Resources\OrderTrackingResource;
 
 class ClientTrackOrderController extends Controller
 {
@@ -17,19 +18,7 @@ class ClientTrackOrderController extends Controller
             }
         ])->findOrFail($orderId);
 
-        return response()->json([
-            'order_id' => $order->id,
-            'status' => $order->latestStatus->status ?? 'Pending',
-            'estimated_delivery_time' => $order->estimated_delivery_time,
-            'delivery_location' => [
-                'latitude' => $order->deliveryTracking->latitude ?? null,
-                'longitude' => $order->deliveryTracking->longitude ?? null,
-                'last_updated_at' => $order->deliveryTracking->last_updated_at ?? null,
-            ],
-            'contact' => [
-                'delivery_person_phone' => $order->delivery_person_phone ?? null,
-            ]
-        ]);
+        return new OrderTrackingResource($order);
     }
 }
 
