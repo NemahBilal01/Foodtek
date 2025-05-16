@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AddressController;
 use App\Http\Controllers\API\FavoriteController;
 use App\Http\Controllers\API\HistoryController;
 use App\Http\Controllers\API\RatingController;
@@ -19,6 +20,9 @@ use App\Http\Controllers\API\RestaurantController;
 use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\ItemRatingController ;
 use App\Http\Controllers\API\SpecialOfferController;
+use App\Http\Controllers\Api\DeliveryStatusesController;
+use App\Http\Controllers\Api\DeliveryTrackingController;
+
 
 // Auth routes
 Route::controller(AuthController::class)->group(function () {
@@ -28,7 +32,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('reset-password', [AuthController::class, 'resetPasswordWithToken']);
     Route::post('forgot-password', 'sendResetToken');
     Route::get('reset-password/{token}', 'verifyResetPasswordToken');
-    
+
 });
 
 // Social Auth
@@ -56,7 +60,8 @@ Route::prefix('cart-items')->controller(CartItemController::class)->group(functi
     // Route::get('/increment/{id}', 'updateQuantity');
     // Route::get('/decrement/{id}', 'updateQuantity');
 });
-
+//address
+Route::post('address', [AddressController::class,'store']);
 // Orders & history
 Route::apiResource('order', OrderController::class)->only(['index', 'store', 'show']);
 Route::get('get_user_orders/{user_id}' , [HistoryController::class , 'getUserOrders']);
@@ -100,3 +105,5 @@ Route::get('/favorites/{id}' ,[FavoriteController::class , 'index']);
 Route::post('/favorites' ,[FavoriteController::class , 'store']);
 Route::delete('/favorites/{id}' ,[FavoriteController::class , 'destroy']);
 
+Route::apiResource('delivery-statuses', DeliveryStatusesController::class);
+Route::apiResource('delivery-tracking', DeliveryTrackingController::class);
