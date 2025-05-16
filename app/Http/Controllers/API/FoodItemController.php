@@ -63,18 +63,19 @@ class FoodItemController extends Controller
         $specialOffer  = $foodItem->specialOffer;
 
         $price_after_discount = $specialOffer ? $foodItem->price - ( $foodItem->price * $specialOffer->discount_percentage / 100) : null;
-        
+
         $rateAvg = round(ItemRating::where('food_item_id', $food_id)->avg('rate') ?? 0, 1);
-        
+
         $numberOfReview = ItemRating::where('food_item_id', $food_id)->count('review');
 
         return response()->json([
-            'food_item'=>new FoodItemResource($foodItem), 
+            'food_item'=>new FoodItemResource($foodItem),
             'price_after_discount'=> $price_after_discount ,
             'rating'=>$rateAvg,
             'number_of_review'=>$numberOfReview
         ]);
 
+        // return new FoodItemResource($foodItem);
     }
 
     /**
@@ -114,7 +115,7 @@ class FoodItemController extends Controller
         return response()->json(['message' => 'Food Item deleted successfully.'], 200);
     }
 
-    
+
     public function recommended(){
         $TopFoodId = CartItem::select('food_item_id' , DB::raw('COUNT(*) as total'))
         ->groupBy('food_item_id')
