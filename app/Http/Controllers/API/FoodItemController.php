@@ -10,6 +10,8 @@ use App\Models\itemRating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\FoodItemResource;
+
 
 class FoodItemController extends Controller
 {
@@ -18,7 +20,7 @@ class FoodItemController extends Controller
      */
     public function index()
     {
-        return FoodItem::all();
+        return FoodItemResource::collection(FoodItem::all());
     }
 
     /**
@@ -38,29 +40,13 @@ class FoodItemController extends Controller
         ]);
 
         if($validated->fails()){
-            return response()->json($validated->errors(),400);
+            return response()->json(['errors' => $validated->errors()], 400);
         }
-        $foodItem = FoodItem::create([
-            'restaurant_id'=>$request->restaurant_id,
-            'category_id'=>$request->category_id,
-            'name'=>$request->name,
-            'description'=>$request->description,
-            'price'=>$request->price,
-            'image_path'=>$request->image_path,
-            'is_available'=>$request->is_available,
-                    ]);
-        // $validated = $request->validate([
-            // 'restaurant_id' => 'required|exists:restaurants,id',
-            // 'category_id' =>'required|exists:categories,id',
-            // 'name'=>'required|string|max:100',
-            // 'description'=>'nullable|string|max:255',
-            // 'price' => 'required|numeric|min:0',
-            // 'image_path'=>'nullable|string',
-            // 'is_available'=>'required|boolean',
+        $foodItem = FoodItem::create($request->only([
+        'restaurant_id', 'category_id', 'name', 'description', 'price', 'image_path', 'is_available'
+       ]));
 
-        // ]);
-        // $foodItem = FoodItem::create($validated);
-        return response()->json($foodItem,201);
+        return (new FoodItemResource($foodItem))->response()->setStatusCode(201);
     }
 
     /**
@@ -68,33 +54,26 @@ class FoodItemController extends Controller
      */
     public function show(string $food_id)
     {
-        //show food item details, avg rating and price after discount
-
         $foodItem = FoodItem::find($food_id);
-        if(!isset($foodItem)){
-            return response()->json(['message'=>'food item not found']);
+
+        if(!$foodItem){
+            return response()->json(['message'=>'food item not found'], 404);
         }
 
-        //get price after discount
         $specialOffer  = $foodItem->specialOffer;
-        if(isset($specialOffer )){
-            $discount = $specialOffer->discount_percentage;
-            $price_after_discount = $foodItem->price - ( $foodItem->price * $discount / 100);
-        }else{
-            $price_after_discount = "null";
-        }
-        // get avg rate form foodItem
-        $rateAvg = ItemRating::where('food_item_id' , $food_id)->avg('rate');
-        if(!isset($rateAvg)){
-            $rateAvg = 'null';
-        }
-         //get count of review
-        $numberOfReview = ItemRating::where('food_item_id' , $food_id)
-        ->count('review');
 
-        // dd($numberOfReview);
-//
-        return response()->json(['food_item'=>$foodItem , 'price_after_discount'=> $price_after_discount ,'rating'=>round($rateAvg ,1) ,'number_of_review'=>$numberOfReview]);
+        $price_after_discount = $specialOffer ? $foodItem->price - ( $foodItem->price * $specialOffer->discount_percentage / 100) : null;
+        
+        $rateAvg = round(ItemRating::where('food_item_id', $food_id)->avg('rate') ?? 0, 1);
+        
+        $numberOfReview = ItemRating::where('food_item_id', $food_id)->count('review');
+
+        return response()->json([
+            'food_item'=>new FoodItemResource($foodItem), 
+            'price_after_discount'=> $price_after_discount ,
+            'rating'=>$rateAvg,
+            'number_of_review'=>$numberOfReview
+        ]);
 
     }
 
@@ -118,27 +97,10 @@ class FoodItemController extends Controller
         if($validated->fails()){
             return response()->json($validated->errors(),400);
         }
-        $foodItem->update([
-            'restaurant_id'=>$request->restaurant_id,
-            'category_id'=>$request->category_id,
-            'name'=>$request->name,
-            'description'=>$request->description,
-            'price'=>$request->price,
-            'image_path'=>$request->image_path,
-            'is_available'=>$request->is_available,
-                    ]);
-
-        // $validated = $request->validate([
-        //     'restaurant_id' => 'sometimes|exists:restaurants,id',
-        //     'category_id' =>'sometimes|exists:categories,id',
-        //     'name'=>'sometimes|string|max:100',
-        //     'description'=>'nullable|string|max:255',
-        //     'price' => 'sometimes|numeric|min:0',
-        //     'image_path'=>'nullable|string',
-        //     'is_available'=>'sometimes|boolean',
-        // ]);
-        // $foodItem->update($validated);
-        return response()->json($foodItem);
+        $foodItem->update($request->only([
+            'restaurant_id', 'category_id', 'name', 'description', 'price', 'image_path', 'is_available'
+        ]));
+        return new FoodItemResource($foodItem);
     }
 
     /**
@@ -148,34 +110,35 @@ class FoodItemController extends Controller
     {
         $foodItem = FoodItem::findOrFail($id);
         $foodItem->delete();
+
         return response()->json(['message' => 'Food Item deleted successfully.'], 200);
     }
-    // get top 10 recommended food
 
+    
     public function recommended(){
-        // get the top food item id
         $TopFoodId = CartItem::select('food_item_id' , DB::raw('COUNT(*) as total'))
-        ->groupBy('food_item_id')->orderBy('total' , 'desc')
-        ->limit(10)->pluck('food_item_id');
+        ->groupBy('food_item_id')
+        ->orderByDesc('total')
+        ->limit(10)
+        ->pluck('food_item_id');
 
-        // get food item data from there id's
         $TopRecommended = FoodItem::whereIn('id' , $TopFoodId)->get();
 
-        return response()->json(['TopRecommended' => $TopRecommended]);
+        return FoodItemResource::collection($TopRecommended);
     }
 
-    //get food item under category
     public function FoodUnderCategory(string $id){
         $category = Category::find($id);
 
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
+
         if($category->is_active === false){
-            return response()->json(['message' => 'Category is not active'], 404);
+            return response()->json(['message' => 'Category is not active'], 403);
         }
 
-        $foodItem = FoodItem::where('category_id', $category->id)->get();
-        return  response()->json(['foodItem' => $foodItem]);
+        $foodItem = FoodItem::where('category_id', $id)->get();
+        return  FoodItemResource::collection($foodItem);
     }
 }
