@@ -20,8 +20,8 @@ use App\Http\Controllers\API\RestaurantController;
 use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\ItemRatingController ;
 use App\Http\Controllers\API\SpecialOfferController;
-use App\Http\Controllers\Api\DeliveryStatusesController;
-use App\Http\Controllers\Api\DeliveryTrackingController;
+use App\Http\Controllers\API\DeliveryStatusesController;
+use App\Http\Controllers\API\DeliveryTrackingController;
 
 
 // Auth routes
