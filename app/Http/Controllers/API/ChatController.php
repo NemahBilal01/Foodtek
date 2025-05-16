@@ -7,6 +7,7 @@ use App\Models\Chat;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\ChatResource;
 
 class ChatController extends Controller
 {
@@ -26,7 +27,7 @@ class ChatController extends Controller
         $chat->message = $request->message;
         $chat->save();
     
-        return response()->json($chat);
+        return new ChatResource($chat);
     }
 
 

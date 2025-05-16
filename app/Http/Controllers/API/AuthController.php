@@ -8,16 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use App\Http\Requests\RegisterRequest;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\ResetPasswordRequest;
-use App\Http\Requests\UpdateProfileRequest;
 use Illuminate\Support\Carbon;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Password;
+use App\Http\Resources\UserResource;
+
 
 class AuthController extends Controller
 {
@@ -32,25 +27,24 @@ class AuthController extends Controller
             'password' => ['required','string','min:6','confirmed',
             'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/',
     ],
-        ]);
-//'birthday' => 'required|date',
+    ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        // Creating the user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'birthday' => $request->date_of_birth,
+            'birthday' => $request->birthday,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
 
         return response()->json([
             'message' => 'Your Account has been Created',
-            'User' => $user
+            'user' => new UserResource($user)
         ], 201);
     }
+
 
     public function login(Request $request)
     {
@@ -73,10 +67,11 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'User Login Successfully',
-            'User' => $user,
-            'Token' => $token
+            'user' => new UserResource($user),
+            'token' => $token
         ], 200);
     }
+
 
     public function logout(Request $request)
     {
@@ -87,6 +82,7 @@ class AuthController extends Controller
             'message' => 'Logout successful'
         ]);
     }
+
 
     public function verifyResetPasswordToken($token)
     {

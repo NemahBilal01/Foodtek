@@ -1,94 +1,71 @@
 <?php
-
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    //get all activated categories
+    // Get all active categories
     public function index()
     {
-        $categories = Category::where('is_active' ,true)->get();
-        return response()->json(['categories'=>$categories]);
+        $categories = Category::where('is_active', true)->get();
+        return CategoryResource::collection($categories);
     }
 
+    // Store a new category
+    public function store(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'restaurant_id' => 'required|exists:restaurants,id',
+            'name' => 'required|string|max:255',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-//     public function store(Request $request)
-//     {
-//         $validated = Validator::make($request->all(),[
-//         'restaurant_id' => 'required|exists:restaurants,id',
-//         'name' => 'required|string| max:255',
-//         ]);
+        if ($validated->fails()) {
+            return response()->json(['errors' => $validated->errors()], 400);
+        }
 
-//         if($validated->fails()){
-//             return response()->json($validated->errors(),400);
-//         }
-//         $category = Category::create([
-//             'restaurant_id'=>$request->restaurant_id,
-//             'name'=>$request->name,
-//                     ]);
+        $category = Category::create($request->only('restaurant_id', 'name'));
 
-//         // $validated = $request->validate([
-//         //     'restaurant_id' => 'required|exists: restaurants,id',
-//         //     'name' => 'required|string| max:255',
-//         // ]);
-//         // $category = Category::create($validated);
-//         return response()->json($category,201);
-//     }
+        return new CategoryResource($category);
+    }
 
-//     /**
-//      * Display the specified resource.
-//      */
+    // Show category with its food items
     public function show(string $id)
     {
-        $category = Category::with('foodItems')->findOrFail($id);//foodItems is the relationship method name in the model
-        return response()->json($category);
+        $category = Category::with('foodItems')->findOrFail($id);
+        return new CategoryResource($category);
     }
 
-//     /**
-//      * Update the specified resource in storage.
-//      */
-//     public function update(Request $request, string $id)
-//     {
-//         $category = Category::findOrFail($id);
+    // Update an existing category
+    public function update(Request $request, string $id)
+    {
+        $category = Category::findOrFail($id);
 
-//         $validated = Validator::make($request->all(),[
-//             'restaurant_id' => 'required|exists:restaurants,id',
-//             'name' => 'required|string| max:255',
-//         ]);
+        $validated = Validator::make($request->all(), [
+            'restaurant_id' => 'required|exists:restaurants,id',
+            'name' => 'required|string|max:255',
+        ]);
 
-//         if($validated->fails()){
-//             return response()->json($validated->errors(),400);
-//         }
-//         // $validated = $request->validate([
-//         //     'restaurant_id' => 'sometimes|exists: restaurants,id',
-//         //     'name' => 'sometimes|string| max:255',
-//         // ]);
-//         // $category->update($validated);
-//         $category->update([
-//             'restaurant_id'=>$request->restaurant_id,
-//             'name'=>$request->name,
-//                     ]);
-//         return response()->json($category);
-//     }
+        if ($validated->fails()) {
+            return response()->json(['errors' => $validated->errors()], 400);
+        }
 
-//     /**
-//      * Remove the specified resource from storage.
-//      */
-//     public function destroy(string $id)
-//     {
-//         $category = Category::findOrFail($id);
-//         $category->delete();
-//         return response()->json(['message'=>'Category deleted successfully.'],200);
-//     }
- }
+        $category->update($request->only('restaurant_id', 'name'));
+
+        return new CategoryResource($category);
+    }
+
+    // Delete a category
+    public function destroy(string $id)
+    {
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        return response()->json(['message' => 'Category deleted successfully.']);
+    }
+}
+

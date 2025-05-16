@@ -3,91 +3,87 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index(){
-        return User::all();
-    }
-
-    public function create()
+    // Return all users as a resource collection
+    public function index()
     {
-        return view('users.create');
+        return UserResource::collection(User::all());
     }
 
+    // Show single user resource
     public function show(User $user)
     {
-        return response()->json($user);
+        return new UserResource($user);
     }
 
+    // Store new user and return resource
     public function store(Request $request)
     {
-
-        $validated = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
-            'phone' => 'nullable|string|max:15'
+            'phone' => 'nullable|string|max:15',
+            'birthday' => 'nullable|date', // Add birthday validation if needed
         ]);
 
-        if ($validated->fails()) {
-            return response()->json($validated->errors(), 400);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
         }
 
-       $user = User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'phone' => $request->phone
+            'phone' => $request->phone,
+            'birthday' => $request->birthday, // Save birthday if present
         ]);
-        return response()->json($user , 201);
+
+        return (new UserResource($user))
+                ->response()
+                ->setStatusCode(201);
     }
 
-
-    public function edit(User $user)
-    {
-        return view('users.edit', compact('user'));
-    }
-
-
+    // Update user and return updated resource
     public function update(Request $request, User $user)
-{
-    $validated = Validator::make($request->all(), [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:8|confirmed',
-        'phone' => 'nullable|string|max:15'
-    ]);
-
-    if ($validated->fails()) {
-        return response()->json($validated->errors(), 400);
-    }
-
-    // Check if phone number is already in use
-    if ($request->phone && User::where('phone', $request->phone)->where('id', '!=', $user->id)->exists()) {
-        return redirect()->back()->withErrors(['phone' => 'Phone number is already taken.']);
-    }
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' =>Hash::make($request->password),
-            'phone' => $request->phone
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:8|confirmed',
+            'phone' => 'nullable|string|max:15|unique:users,phone,' . $user->id,
+            'birthday' => 'nullable|date',
         ]);
 
-        return response()->json($user);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
 
-}
+        $data = $validator->validated();
 
+        if (!empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
 
+        $user->update($data);
+
+        return new UserResource($user);
+    }
+
+    // Delete user and return success message
     public function destroy(User $user)
     {
         $user->delete();
-        return response()->json(['message'=>'deleted successfully'] ,200);
 
+        return response()->json(['message' => 'Deleted successfully'], 200);
     }
 }
