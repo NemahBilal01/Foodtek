@@ -20,7 +20,7 @@ class RatingResource extends JsonResource
             'user_id' => $this->user_id,
             'rate' => $this->rate,
             'review' => $this->review,
-            'created_at' => $this->created_at,
+            // 'created_at' => $this->created_at,
         ];
     }
 }

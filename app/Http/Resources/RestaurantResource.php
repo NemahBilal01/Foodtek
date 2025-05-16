@@ -22,8 +22,8 @@ class RestaurantResource extends JsonResource
             'logo_url' => $this->logo_url,
             'opening_time' => $this->opening_time,
             'closing_time' => $this->closing_time,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            // 'created_at' => $this->created_at,
+            // 'updated_at' => $this->updated_at,
         ];
     }
 }

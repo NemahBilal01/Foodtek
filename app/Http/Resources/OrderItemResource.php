@@ -20,8 +20,8 @@ class OrderItemResource extends JsonResource
             'food_item_id' => $this->food_item_id,
             'quantity' => $this->quantity,
             'price' => $this->price,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            // 'created_at' => $this->created_at,
+            // 'updated_at' => $this->updated_at,
         ];
     }
 }
