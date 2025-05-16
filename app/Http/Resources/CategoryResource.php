@@ -17,7 +17,8 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             // 'restaurant_id' => $this->restaurant_id,
-            'name' => app()->getLocale() === 'ar' ? $this->name_ar : $this->name_en,
+            'name_ar' => $this->name_ar,
+            'name_en' => $this->name_en,
             'is_active' => $this->is_active,
             // 'created_at' => $this->created_at,
             'food_items' => FoodItemResource::collection($this->whenLoaded('foodItems')),

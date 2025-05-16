@@ -21,8 +21,8 @@ class OrderResource extends JsonResource
             'total_price' => $this->total_price,
             'payment_status' => $this->payment_status,
             'restaurant_id' => $this->restaurant_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            // 'created_at' => $this->created_at,
+            // 'updated_at' => $this->updated_at,
         ];
     }
 }

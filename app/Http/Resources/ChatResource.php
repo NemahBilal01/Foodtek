@@ -21,7 +21,7 @@ class ChatResource extends JsonResource
             'sender_type' => $this->sender_type,
             'message' => $this->message,
             'is_archived' => $this->is_archived,
-            'created_at' => $this->created_at->toDateTimeString(),
+            // 'created_at' => $this->created_at->toDateTimeString(),
         ];
     }
 }

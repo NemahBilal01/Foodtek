@@ -18,8 +18,8 @@ class FavoriteResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'food_item_id' => $this->food_item_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            // 'created_at' => $this->created_at,
+            // // 'updated_at' => $this->updated_at,
         ];
     }
 }

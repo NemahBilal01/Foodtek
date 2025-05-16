@@ -18,8 +18,8 @@ class DeliveryStatusResource extends JsonResource
             'id' => $this->id,
             'order_id' => $this->order_id,
             'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            // 'created_at' => $this->created_at,
+            // 'updated_at' => $this->updated_at,
         ];
     }
 }

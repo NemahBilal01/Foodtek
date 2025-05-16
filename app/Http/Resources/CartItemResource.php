@@ -16,10 +16,10 @@ class CartItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            // 'user_id' => $this->user_id,
             'food_item' => new FoodItemResource($this->whenLoaded('foodItem')),
             'quantity' => $this->quantity,
-            'created_at' => $this->created_at,
+            // 'created_at' => $this->created_at,
         ];
     }
 }
