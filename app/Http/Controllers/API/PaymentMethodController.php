@@ -16,7 +16,7 @@ class PaymentMethodController extends Controller
 
         return response()->json($paymentMethods);
     }
- 
+
     public function store(Request $request){
         $validated = Validator::make($request->all() , [
             'user_id'=>'required|exists:users,id',
@@ -24,7 +24,7 @@ class PaymentMethodController extends Controller
             'type'=>'required',
             'holder_name' => 'required|string|max:255',
             'card_number' => 'required|digits:16',
-            'expire_date' => 'required|date_format:d/m',
+            'expire_date' => 'required|date_format:m/y',
             'CVC_code' => 'required|digits:3',
         ]);
 
@@ -33,7 +33,7 @@ class PaymentMethodController extends Controller
         }
         // Get last 4 digits
         $cardNumber = $request->card_number;
-        $lastFourDigits = substr($cardNumber, -4); 
+        $lastFourDigits = substr($cardNumber, -4);
 
         $paymentMethod = PaymentMethod::create([
             'user_id'=>$request->user_id,
