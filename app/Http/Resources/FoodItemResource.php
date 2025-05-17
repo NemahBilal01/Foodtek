@@ -37,7 +37,7 @@ class FoodItemResource extends JsonResource
             'number_of_reviews' => $this->when(isset($this->review_count), $this->review_count),
             // 'created_at' => $this->created_at,
             // 'updated_at' => $this->updated_at,
-            'ratings_avg_rate'=>$this->ratings_avg_rate,
+            'ratings_avg_rate'=>round($this->ratings_avg_rate ,1),
         ];
     }
 }
