@@ -19,6 +19,7 @@ class ItemRatingController extends Controller
             ->take(10)
             ->get();
 
+        // return response()->json($topFoods);
         return FoodItemResource::collection($topFoods);
     }
 
