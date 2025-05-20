@@ -52,7 +52,9 @@ class AddressController extends Controller
                 'zip_code'=>$request->zip_code,
                         ]);
 
-        return response()->json([$address, 'message'=>'“New Delivery Address Has been Added'], 201);
+            $deliveryAddress= new AddressResource($address);
+
+            return response()->json([ 'data' => $deliveryAddress, 'message'=>'“New Delivery Address Has been Added'], 201);
     }
 
     /**
